@@ -9,6 +9,7 @@ Pingpp::Charge.create(
   :amount   => 100,
   :order_no => orderNo,
   :channel  => Pingpp::Channel::ALIPAY,
+  :currency => 'cny',
   :client_ip=> '127.0.0.1',
   :app => {'id' => "YOUR-APP-ID"}
 )

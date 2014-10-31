@@ -70,7 +70,7 @@ module Pingpp
         'email support@pingplusplus.com if you have any questions.)')
     end
 
-    request_opts = { :verify_ssl => false }
+    request_opts = { :verify_ssl => false, :ssl_version => 'TLSv1' }
 
     if ssl_preflight_passed?
       request_opts.update(:verify_ssl => OpenSSL::SSL::VERIFY_PEER,
