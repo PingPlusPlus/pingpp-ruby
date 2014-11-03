@@ -30,7 +30,7 @@ Pingpp::Charge.create(
   :subject  => "Charge Subject",
   :body     => "Charge Body",
   :amount   => 100,
-  :order_no => "orderNo",
+  :order_no => "1234567890",
   :channel  => Pingpp::Channel::ALIPAY,
   :currency => 'cny',
   :client_ip=> '127.0.0.1',

@@ -50,9 +50,6 @@ module Pingpp
       @previous_metadata = values[:metadata]
       removed = partial ? Set.new : Set.new(@values.keys - values.keys)
       added = Set.new(values.keys - @values.keys)
-      # Wipe old state before setting new.  This is useful for e.g. updating a
-      # customer, where there is no persistent card parameter.  Mark those values
-      # which don't persist as transient
 
       instance_eval do
         remove_accessors(removed)

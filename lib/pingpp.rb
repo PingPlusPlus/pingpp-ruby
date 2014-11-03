@@ -220,8 +220,6 @@ module Pingpp
       raise invalid_request_error error, rcode, rbody, error_obj
     when 401
       raise authentication_error error, rcode, rbody, error_obj
-    when 402
-      raise card_error error, rcode, rbody, error_obj
     else
       raise api_error error, rcode, rbody, error_obj
     end
@@ -235,11 +233,6 @@ module Pingpp
 
   def self.authentication_error(error, rcode, rbody, error_obj)
     AuthenticationError.new(error[:message], rcode, rbody, error_obj)
-  end
-
-  def self.card_error(error, rcode, rbody, error_obj)
-    CardError.new(error[:message], error[:param], error[:code],
-                  rcode, rbody, error_obj)
   end
 
   def self.api_error(error, rcode, rbody, error_obj)
