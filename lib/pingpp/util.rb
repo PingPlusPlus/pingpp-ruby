@@ -19,6 +19,7 @@ module Pingpp
       @object_classes ||= {
         'charge' => Charge,
         'list' => ListObject,
+        'refund' => Refund
       }
     end
 
