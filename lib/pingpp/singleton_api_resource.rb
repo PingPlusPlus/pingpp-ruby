@@ -1,6 +1,6 @@
 module Pingpp
   class SingletonAPIResource < APIResource
-    def self.url()
+    def self.url
       if self == SingletonAPIResource
         raise NotImplementedError.new('SingletonAPIResource is an abstract class.  You should perform actions on its subclasses (Account, etc.)')
       end

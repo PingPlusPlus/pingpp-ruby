@@ -30,16 +30,14 @@ module Pingpp
     end
 
     def self.construct_from(values, api_key=nil)
-      obj = self.new(values[:id], api_key)
-      obj.refresh_from(values, api_key)
-      obj
+      self.new(values[:id], api_key).refresh_from(values, api_key)
     end
 
     def to_s(*args)
       JSON.pretty_generate(@values)
     end
 
-    def inspect()
+    def inspect
       id_string = (self.respond_to?(:id) && !self.id.nil?) ? " id=#{self.id}" : ""
       "#<#{self.class}:0x#{self.object_id.to_s(16)}#{id_string}> JSON: " + JSON.pretty_generate(@values)
     end
@@ -65,6 +63,8 @@ module Pingpp
         @transient_values.delete(k)
         @unsaved_values.delete(k)
       end
+
+      return self
     end
 
     def [](k)
