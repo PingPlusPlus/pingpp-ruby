@@ -40,8 +40,8 @@ Pingpp::Charge.create(
 
 详细使用方法请参考 [技术文档](https://pingplusplus.com/document) 或者参考 [example](https://github.com/PingPlusPlus/pingpp-ruby/tree/master/example) 文件夹里的示例。
 
-##更新日志
+## 更新日志
 
-###1.0.3
+### 1.0.3
 * 更改：<br>
 移除旧的 refund 方法
