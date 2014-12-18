@@ -90,10 +90,10 @@ module Pingpp
       url += "#{URI.parse(url).query ? '&' : '?'}#{uri_encode(params)}" if params && params.any?
       payload = nil
     else
-      payload = uri_encode(params)
+      payload = JSON.generate(params)
     end
 
-    request_opts.update(:headers => request_headers(api_key).update(headers),
+    request_opts.update(:headers => request_headers(api_key, method.to_s.downcase.to_sym == :post).update(headers),
                         :method => method, :open_timeout => 30,
                         :payload => payload, :url => url, :timeout => 80)
 
@@ -167,11 +167,11 @@ module Pingpp
       map { |k,v| "#{k}=#{Util.url_encode(v)}" }.join('&')
   end
 
-  def self.request_headers(api_key)
+  def self.request_headers(api_key, is_post=false)
     headers = {
       :user_agent => "Pingpp/v1 RubyBindings/#{Pingpp::VERSION}",
       :authorization => "Bearer #{api_key}",
-      :content_type => 'application/x-www-form-urlencoded'
+      :content_type => is_post ? 'application/json' : 'application/x-www-form-urlencoded'
     }
 
     headers[:pingplusplus_version] = api_version if api_version
