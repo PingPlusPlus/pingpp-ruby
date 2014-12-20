@@ -2,7 +2,7 @@ module Pingpp
   class Channel
     ALIPAY = "alipay"
     WECHAT = "wx"
-    WX = "wx"
+    WX = "wx" # Alias of WECHAT
     UPMP = "upmp"
     ALIPAY_WAP = "alipay_wap"
     UPMP_WAP = "upmp_wap"
