@@ -35,6 +35,9 @@ require 'pingpp/errors/api_connection_error'
 require 'pingpp/errors/invalid_request_error'
 require 'pingpp/errors/authentication_error'
 
+# WxPubOauth
+require 'pingpp/wx_pub_oauth'
+
 module Pingpp
   DEFAULT_CA_BUNDLE_PATH = File.dirname(__FILE__) + '/data/ca-certificates.crt'
   @api_base = 'https://api.pingxx.com'
