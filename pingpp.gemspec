@@ -6,10 +6,10 @@ spec = Gem::Specification.new do |s|
   s.name = 'pingpp'
   s.version = Pingpp::VERSION
   s.summary = 'Ruby bindings for the PingPlusPlus API'
-  s.description = 'PingPlusPlus is the easiest way to accept payments online.  See https://pingplusplus.com for details.'
+  s.description = 'PingPlusPlus is the easiest way to accept payments online.  See https://pingxx.com for details.'
   s.authors = ['Xufeng Weng']
-  s.email = ['xufeng.weng@pingplusplus.com']
-  s.homepage = 'https://pingplusplus.com/document/api'
+  s.email = ['xufeng.weng@pingxx.com']
+  s.homepage = 'https://pingxx.com/document/api'
   s.license = 'MIT'
 
   s.add_dependency('rest-client', '~> 1.4')

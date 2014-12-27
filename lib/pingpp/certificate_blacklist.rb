@@ -5,7 +5,7 @@ module Pingpp
   module CertificateBlacklist
 
     BLACKLIST = {
-      "api.pingplusplus.com" => [
+      "api.pingxx.com" => [
         '05c0b3643694470a888c6e7feb5c9e24e823dc53',
         '5b7dc7fbc98d78bf76d4d4fa6f597a0c901fad5c',
       ]
@@ -39,7 +39,7 @@ module Pingpp
           raise APIConnectionError.new(
             "Invalid server certificate. You tried to connect to a server that" +
             "has a revoked SSL certificate, which means we cannot securely send" +
-            "data to that server. Please email support@pingplusplus.com if you need" +
+            "data to that server. Please email support@pingxx.com if you need" +
             "help connecting to the correct API server."
           )
         end

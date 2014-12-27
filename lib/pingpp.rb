@@ -1,5 +1,5 @@
 # Pingpp Ruby bindings
-# API spec at https://pingplusplus.com/document/api
+# API spec at https://pingxx.com/document/api
 require 'cgi'
 require 'set'
 require 'openssl'
@@ -37,7 +37,7 @@ require 'pingpp/errors/authentication_error'
 
 module Pingpp
   DEFAULT_CA_BUNDLE_PATH = File.dirname(__FILE__) + '/data/ca-certificates.crt'
-  @api_base = 'https://api.pingplusplus.com'
+  @api_base = 'https://api.pingxx.com'
 
   @api_version = '2014-10-10'
 
@@ -59,15 +59,15 @@ module Pingpp
       raise AuthenticationError.new('No API key provided. ' +
         'Set your API key using "Pingpp.api_key = <API-KEY>". ' +
         'You can generate API keys from the Pingpp web interface. ' +
-        'See https://pingplusplus.com/document/api for details, or email support@pingplusplus.com ' +
+        'See https://pingxx.com/document/api for details, or email support@pingxx.com ' +
         'if you have any questions.')
     end
 
     if api_key =~ /\s/
       raise AuthenticationError.new('Your API key is invalid, as it contains ' +
         'whitespace. (HINT: You can double-check your API key from the ' +
-        'Pingpp web interface. See https://pingplusplus.com/document/api for details, or ' +
-        'email support@pingplusplus.com if you have any questions.)')
+        'Pingpp web interface. See https://pingxx.com/document/api for details, or ' +
+        'email support@pingxx.com if you have any questions.)')
     end
 
     request_opts = { :verify_ssl => false, :ssl_version => 'TLSv1' }
@@ -242,7 +242,7 @@ module Pingpp
   def self.handle_restclient_error(e)
     connection_message = "Please check your internet connection and try again. " \
         "If this problem persists, you should check Pingpp's service status at " \
-        "https://pingplusplus.com, or let us know at support@pingplusplus.com."
+        "https://pingxx.com, or let us know at support@pingxx.com."
 
     case e
     when RestClient::RequestTimeout
@@ -256,16 +256,16 @@ module Pingpp
       message = "Could not verify Pingpp's SSL certificate. " \
         "Please make sure that your network is not intercepting certificates. " \
         "(Try going to (#{@api_base}) in your browser.) " \
-        "If this problem persists, let us know at support@pingplusplus.com."
+        "If this problem persists, let us know at support@pingxx.com."
 
     when SocketError
       message = "Unexpected error communicating when trying to connect to Pingpp. " \
         "You may be seeing this message because your DNS is not working. " \
-        "To check, try running 'host pingplusplus.com' from the command line."
+        "To check, try running 'host pingxx.com' from the command line."
 
     else
       message = "Unexpected error communicating with Pingpp. " \
-        "If this problem persists, let us know at support@pingplusplus.com."
+        "If this problem persists, let us know at support@pingxx.com."
 
     end
 
