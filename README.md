@@ -1,12 +1,13 @@
 Pingpp Ruby SDK 
 =================
-
 ****
 
 ## 简介
-
 lib 文件夹下是 Ruby SDK 文件，<br>
 example 文件夹里面是一个简单的接入示例，该示例仅供参考。
+
+## 版本要求
+Ruby 版本 1.8.7 及以上
 
 ## 安装
 ```
@@ -19,29 +20,9 @@ gem install pingpp-<VERSION>.gem
 ```
 
 ## 接入方法
-
-发起支付请求示例：
-
-```ruby
-require "pingpp"
-
-Pingpp.api_key = "YOUR-KEY"
-Pingpp::Charge.create(
-  :order_no  => '1234567890',
-  :app       => {'id' => "YOUR-APP-ID"},
-  :channel   => Pingpp::Channel::ALIPAY,
-  :amount    => 100,
-  :client_ip => '127.0.0.1',
-  :currency  => 'cny',
-  :subject   => 'Charge Subject',
-  :body      => 'Charge Body'
-)
-```
-
-详细使用方法请参考 [技术文档](https://pingxx.com/document) 或者参考 [example](https://github.com/PingPlusPlus/pingpp-ruby/tree/master/example) 文件夹里的示例。
+关于如何使用 SDK 请参考 [技术文档](https://pingxx.com/document) 或者参考 [example](https://github.com/PingPlusPlus/pingpp-ruby/tree/master/example) 文件夹里的示例。
 
 ## 更新日志
-
 ### 2.0.0
 * 更改：<br>
 添加新渠道：百付宝、百付宝WAP、微信公众号
