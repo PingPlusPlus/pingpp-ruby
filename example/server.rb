@@ -7,6 +7,7 @@ require 'pingpp'
 class Pay < WEBrick::HTTPServlet::AbstractServlet
   def do_POST(request, response)
     Pingpp.api_key = "YOUR-KEY"
+    Pingpp.parse_headers(request.header)
     begin
       post_data = JSON.parse(request.body)
     rescue JSON::ParserError

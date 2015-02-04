@@ -17,6 +17,7 @@ when Pingpp::Channel::UPMP_WAP
   }
 end
 orderNo = Digest::MD5.hexdigest(Time.now.to_i.to_s)[0,12]
+Pingpp.parse_headers(headers) # request headers
 Pingpp::Charge.create(
   :order_no => orderNo,
   :app      => {'id' => "YOUR-APP-ID"},

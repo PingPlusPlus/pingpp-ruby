@@ -48,13 +48,31 @@ module Pingpp
   @verify_ssl_certs = true
   @CERTIFICATE_VERIFIED = false
 
+  HEADERS_TO_PARSE = [:pingpp_one_version, :pingpp_sdk_version]
 
   class << self
-    attr_accessor :api_key, :api_base, :verify_ssl_certs, :api_version
+    attr_accessor :api_key, :api_base, :verify_ssl_certs, :api_version, :parsed_headers
   end
 
   def self.api_url(url='')
     @api_base + url
+  end
+
+  def self.parse_headers(headers)
+    @parsed_headers = {}
+    if headers && headers.respond_to?("each")
+      headers.each do |k, v|
+        k = k[0, 5] == 'HTTP_' ? k[5..-1] : k
+        header_key = k.gsub(/-/, '_').to_s.downcase.to_sym
+        if HEADERS_TO_PARSE.include?(header_key)
+          if v.is_a?(String)
+            @parsed_headers[header_key] = v
+          elsif v.is_a?(Array)
+            @parsed_headers[header_key] = v[0]
+          end
+        end
+      end
+    end
   end
 
   def self.request(method, url, api_key, params={}, headers={})
@@ -178,6 +196,7 @@ module Pingpp
     }
 
     headers[:pingplusplus_version] = api_version if api_version
+    headers.update(parsed_headers) if parsed_headers && !parsed_headers.empty?
 
     begin
       headers.update(:x_pingpp_client_user_agent => JSON.generate(user_agent))
