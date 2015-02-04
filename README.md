@@ -23,6 +23,10 @@ gem install pingpp-<VERSION>.gem
 关于如何使用 SDK 请参考 [技术文档](https://pingxx.com/document) 或者参考 [example](https://github.com/PingPlusPlus/pingpp-ruby/tree/master/example) 文件夹里的示例。
 
 ## 更新日志
+### 2.0.1
+* 更改：<br>
+传递客户端的请求头部到 API
+
 ### 2.0.0
 * 更改：<br>
 添加新渠道：百付宝、百付宝WAP、微信公众号
