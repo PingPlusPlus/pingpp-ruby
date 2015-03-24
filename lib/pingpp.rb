@@ -9,9 +9,6 @@ require 'json'
 # Version
 require 'pingpp/version'
 
-# Channel constants
-require 'pingpp/channel'
-
 # API operations
 require 'pingpp/api_operations/create'
 require 'pingpp/api_operations/update'
@@ -27,6 +24,7 @@ require 'pingpp/list_object'
 require 'pingpp/certificate_blacklist'
 require 'pingpp/charge'
 require 'pingpp/refund'
+require 'pingpp/red_envelope'
 
 # Errors
 require 'pingpp/errors/pingpp_error'

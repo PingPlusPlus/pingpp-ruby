@@ -3,21 +3,21 @@ require "digest/md5"
 
 Pingpp.api_key = "YOUR-KEY"
 
-channel = Pingpp::Channel::ALIPAY
+channel = 'alipay'
 extra = {}
 case channel
-when Pingpp::Channel::ALIPAY_WAP
+when 'alipay_wap'
   extra = {
     'success_url' => 'http://www.yourdomain.com/success',
     'cancel_url'  => 'http://www.yourdomain.com/cancel'
   }
-when Pingpp::Channel::UPMP_WAP
+when 'upacp_wap'
   extra = {
     'result_url' => 'http://www.yourdomain.com/result?code='
   }
 end
 orderNo = Digest::MD5.hexdigest(Time.now.to_i.to_s)[0,12]
-Pingpp.parse_headers(headers) # request headers
+# Pingpp.parse_headers(headers) # request headers
 Pingpp::Charge.create(
   :order_no => orderNo,
   :app      => {'id' => "YOUR-APP-ID"},

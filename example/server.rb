@@ -19,21 +19,21 @@ class Pay < WEBrick::HTTPServlet::AbstractServlet
     client_ip = request.remote_ip
     extra = {}
     case channel
-    when Pingpp::Channel::ALIPAY_WAP
+    when 'alipay_wap'
       extra = {
         'success_url' => 'http://www.yourdomain.com/success',
         'cancel_url'  => 'http://www.yourdomain.com/cancel'
       }
-    when Pingpp::Channel::UPMP_WAP, Pingpp::Channel::UPACP_WAP
+    when 'upacp_wap', 'upmp_wap'
       extra = {
         'result_url' => 'http://www.yourdomain.com/result?code='
       }
-    when Pingpp::Channel::BFB_WAP
+    when 'bfb_wap'
       extra = {
         'bfb_login' => true,
         'result_url' => 'http://www.yourdomain.com/success'
       }
-    when Pingpp::Channel::WX_PUB
+    when 'wx_pub'
       extra = {
         'trade_type' => 'JSAPI',
         'open_id' => open_id
