@@ -35,8 +35,8 @@ Pingpp::Charge.create(
   :amount    => 100,
   :client_ip => "127.0.0.1",
   :currency  => "cny",
-  :subject   => "Charge Subject",
-  :body      => "Charge Body"
+  :subject   => "Your Subject",
+  :body      => "Your Body"
 )
 ```
 
