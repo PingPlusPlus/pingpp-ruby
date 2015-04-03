@@ -24,7 +24,11 @@ module Pingpp
       }
       response = RestClient::Request.execute(request_opts)
       response = JSON.parse(response.body)
-      response['openid']
+      if response['openid'].nil? then
+        return nil, response
+      else
+        return response['openid'], nil
+      end
     end
 
     def self.create_oauth_url_for_openid(app_id, app_secret, code)

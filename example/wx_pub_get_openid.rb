@@ -14,7 +14,7 @@ end
 class GetOpenid < WEBrick::HTTPServlet::AbstractServlet
   def do_GET(request, response)
     query = request.query
-    openid = Pingpp::WxPubOauth.get_openid('WX-PUB-APP-ID', 'WX-PUB-APP-SECRET', query['code'])
+    openid, error = Pingpp::WxPubOauth.get_openid('WX-PUB-APP-ID', 'WX-PUB-APP-SECRET', query['code'])
     # ...
     # pass openid to extra['open_id'] and create a charge
     # ...
