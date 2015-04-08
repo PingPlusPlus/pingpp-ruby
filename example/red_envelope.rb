@@ -4,7 +4,7 @@ require "digest/md5"
 Pingpp.api_key = "YOUR-KEY"
 
 begin
-  ch = Pingpp::RedEnvelope.create(
+  red = Pingpp::RedEnvelope.create(
     :order_no    => "123456789",
     :app         => { :id => "YOUR-APP-ID" },
     :channel     => "wx_pub",
@@ -20,7 +20,7 @@ begin
     :description => "Your Description"
   )
 
-  puts ch
+  puts red
 rescue Pingpp::PingppError => e
   puts e
 end
