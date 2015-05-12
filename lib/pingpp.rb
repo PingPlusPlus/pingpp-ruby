@@ -26,6 +26,7 @@ require 'pingpp/charge'
 require 'pingpp/refund'
 require 'pingpp/red_envelope'
 require 'pingpp/event'
+require 'pingpp/transfer'
 
 # Errors
 require 'pingpp/errors/pingpp_error'
