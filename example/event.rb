@@ -2,8 +2,8 @@ require "pingpp"
 
 Pingpp.api_key = "YOUR-KEY"
 
-# retrieve event
-Pingpp::Event.retrieve("EVENT-ID")
+# retrieve an event
+Pingpp::Event.retrieve("EVENT_ID")
 
-# list events
+# list all events
 Pingpp::Event.all(:limit => 3)
