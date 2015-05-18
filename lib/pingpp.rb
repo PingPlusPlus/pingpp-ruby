@@ -25,6 +25,7 @@ require 'pingpp/certificate_blacklist'
 require 'pingpp/charge'
 require 'pingpp/refund'
 require 'pingpp/red_envelope'
+require 'pingpp/event'
 
 # Errors
 require 'pingpp/errors/pingpp_error'
