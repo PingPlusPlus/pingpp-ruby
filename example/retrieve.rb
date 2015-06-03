@@ -1,4 +1,4 @@
 require "pingpp"
 
 Pingpp.api_key = "YOUR-KEY"
-Pingpp::Charge.retrieve("CHARGE-ID")
+Pingpp::Charge.retrieve("CHARGE_ID")

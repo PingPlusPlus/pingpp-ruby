@@ -42,7 +42,7 @@ Pingpp::Charge.create(
 
 ### 查询
 ``` ruby
-Pingpp::Charge.retrieve("CHARGE-ID")
+Pingpp::Charge.retrieve("CHARGE_ID")
 ```
 ``` ruby
 Pingpp::Charge.all(:limit => 5)
@@ -50,15 +50,15 @@ Pingpp::Charge.all(:limit => 5)
 
 ### 退款
 ``` ruby
-Pingpp::Charge.retrieve("CHARGE-ID").refunds.create(:description => "Refund Description")
+Pingpp::Charge.retrieve("CHARGE_ID").refunds.create(:description => "Refund Description")
 ```
 
 ### 退款查询
 ``` ruby
-Pingpp::Charge.retrieve("CHARGE-ID").refunds.retrieve("REFUND-ID")
+Pingpp::Charge.retrieve("CHARGE_ID").refunds.retrieve("REFUND_ID")
 ```
 ``` ruby
-Pingpp::Charge.retrieve("CHARGE-ID").refunds.all(:limit => 5)
+Pingpp::Charge.retrieve("CHARGE_ID").refunds.all(:limit => 5)
 ```
 
 ### 微信红包
@@ -95,6 +95,14 @@ signature = Pingpp::WxPubOauth.get_signature(charge, ticket, url)
 然后在 HTML5 SDK 里调用
 ``` js
 pingpp.createPayment(charge, callback, signature, false);
+```
+
+### Event 事件
+``` ruby
+Pingpp::Event.retrieve("EVENT_ID")
+```
+``` ruby
+Pingpp::Event.all(:limit => 5)
 ```
 
 **详细信息请参考 [API 文档](https://pingxx.com/document/api?ruby)。**
