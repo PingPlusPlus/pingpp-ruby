@@ -77,7 +77,7 @@ module Pingpp
       array_to_sign = [
         'jsapi_ticket=' + jsapi_ticket,
         'noncestr=' + credential['nonceStr'],
-        'timestamp=' + credential['timeStamp'],
+        'timestamp=' + credential['timeStamp'].to_s,
         'url=' + url.split('#')[0]
       ]
       siganture = Digest::SHA1.hexdigest(array_to_sign.join('&'))
