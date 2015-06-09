@@ -41,7 +41,7 @@ module Pingpp
   DEFAULT_CA_BUNDLE_PATH = File.dirname(__FILE__) + '/data/ca-certificates.crt'
   @api_base = 'https://api.pingxx.com'
 
-  @api_version = '2015-01-01'
+  @api_version = '2015-06-03'
 
   @ssl_bundle_path  = DEFAULT_CA_BUNDLE_PATH
   @verify_ssl_certs = true

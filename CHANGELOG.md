@@ -1,3 +1,7 @@
+### 2.0.6
+* 更改：<br>
+兼容微信公众号 credential 内 timeStamp 字段为整型的情况
+
 ### 2.0.5
 * 增加：<br>
 增加 Event 接口
