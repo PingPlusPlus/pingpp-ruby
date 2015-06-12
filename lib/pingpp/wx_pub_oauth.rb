@@ -80,7 +80,7 @@ module Pingpp
         'timestamp=' + credential['timeStamp'].to_s,
         'url=' + url.split('#')[0]
       ]
-      siganture = Digest::SHA1.hexdigest(array_to_sign.join('&'))
+      signature = Digest::SHA1.hexdigest(array_to_sign.join('&'))
     end
   end
 end
