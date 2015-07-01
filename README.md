@@ -30,7 +30,7 @@ Pingpp.api_key = "YOUR-KEY"
 ``` ruby
 Pingpp::Charge.create(
   :order_no  => "123456789",
-  :app       => { :id => "YOUR-APP-ID" },
+  :app       => { :id => "APP_ID" },
   :channel   => channel,
   :amount    => 100,
   :client_ip => "127.0.0.1",
@@ -61,11 +61,11 @@ Pingpp::Charge.retrieve("CHARGE_ID").refunds.retrieve("REFUND_ID")
 Pingpp::Charge.retrieve("CHARGE_ID").refunds.all(:limit => 5)
 ```
 
-### 微信红包
+### 红包
 ``` ruby
 Pingpp::RedEnvelope.create(
   :order_no    => "123456789",
-  :app         => { :id => "YOUR-APP-ID" },
+  :app         => { :id => "APP_ID" },
   :channel     => "wx_pub",
   :amount      => 100,
   :currency    => "cny",
@@ -103,6 +103,27 @@ Pingpp::Event.retrieve("EVENT_ID")
 ```
 ``` ruby
 Pingpp::Event.all(:limit => 5)
+```
+
+### 企业付款
+``` ruby
+Pingpp::Transfer.create(
+  :order_no    => "123456789",
+  :app         => { :id => "APP_ID" },
+  :channel     => "wx_pub",
+  :amount      => 100,
+  :currency    => "cny",
+  :type        => "b2c",
+  :recipient   => "Openid",
+  :description => "Your Description"
+)
+```
+### 企业付款查询
+``` ruby
+Pingpp::Transfer.retrieve("TRANSFER_ID")
+```
+``` ruby
+Pingpp::Transfer.all(:limit => 5)
 ```
 
 **详细信息请参考 [API 文档](https://pingxx.com/document/api?ruby)。**

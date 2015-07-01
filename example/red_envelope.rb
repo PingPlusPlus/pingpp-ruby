@@ -1,5 +1,4 @@
 require "pingpp"
-require "digest/md5"
 
 Pingpp.api_key = "YOUR-KEY"
 

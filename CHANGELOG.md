@@ -1,3 +1,7 @@
+### 2.0.7
+* 增加：<br>
+增加 Transfer 接口
+
 ### 2.0.6
 * 更改：<br>
 兼容微信公众号 credential 内 timeStamp 字段为整型的情况
