@@ -34,6 +34,7 @@ require 'pingpp/errors/api_error'
 require 'pingpp/errors/api_connection_error'
 require 'pingpp/errors/invalid_request_error'
 require 'pingpp/errors/authentication_error'
+require 'pingpp/errors/channel_error'
 
 # WxPubOauth
 require 'pingpp/wx_pub_oauth'
@@ -242,6 +243,8 @@ module Pingpp
       raise invalid_request_error error, rcode, rbody, error_obj
     when 401
       raise authentication_error error, rcode, rbody, error_obj
+    when 402
+      raise channel_error error, rcode, rbody, error_obj
     else
       raise api_error error, rcode, rbody, error_obj
     end
@@ -255,6 +258,10 @@ module Pingpp
 
   def self.authentication_error(error, rcode, rbody, error_obj)
     AuthenticationError.new(error[:message], rcode, rbody, error_obj)
+  end
+
+  def self.channel_error(error, rcode, rbody, error_obj)
+    ChannelError.new(error[:message], error[:code], error[:param], rcode, rbody, error_obj)
   end
 
   def self.api_error(error, rcode, rbody, error_obj)
