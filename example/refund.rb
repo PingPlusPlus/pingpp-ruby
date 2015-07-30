@@ -5,6 +5,6 @@ require "pingpp"
 API_KEY = "sk_test_ibbTe5jLGCi5rzfH4OqPW9KC" # 这里填入你的 Test/Live Key
 Pingpp.api_key = API_KEY
 
-ch = Pingpp::Charge.retrieve("ch_Gm9GuH0aHmrTrrr5m9KuDm18")
+ch = Pingpp::Charge.retrieve("ch_bLWP80Ci9S4ODaXLSKLOGe5S")
 re = ch.refunds.create(:description => "Refund Description", :amount => 1)
 puts re
