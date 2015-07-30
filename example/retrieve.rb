@@ -1,4 +1,9 @@
 require "pingpp"
 
-Pingpp.api_key = "YOUR-KEY"
-Pingpp::Charge.retrieve("CHARGE_ID")
+# 配置 API Key 和 App ID #
+# 从 Ping++ 管理平台应用信息里获取 #
+API_KEY = "sk_test_ibbTe5jLGCi5rzfH4OqPW9KC" # 这里填入你的 Test/Live Key
+Pingpp.api_key = API_KEY
+
+ch = Pingpp::Charge.retrieve("ch_Gm9GuH0aHmrTrrr5m9KuDm18")
+puts ch

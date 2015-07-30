@@ -4,7 +4,7 @@ require 'pingpp'
 # 跳转到微信进行认证
 class Oauth < WEBrick::HTTPServlet::AbstractServlet
   def do_GET(request, response)
-    url = Pingpp::WxPubOauth.create_oauth_url_for_code('WX-PUB-APP-ID', 'http://example.com/getopenid?showwxpaytitle=1')
+    url = Pingpp::WxPubOauth.create_oauth_url_for_code('WX_PUB_APP_ID', 'http://example.com/getopenid?showwxpaytitle=1')
     response.status = 302
     response['Location'] = url
   end
@@ -14,7 +14,7 @@ end
 class GetOpenid < WEBrick::HTTPServlet::AbstractServlet
   def do_GET(request, response)
     query = request.query
-    openid, error = Pingpp::WxPubOauth.get_openid('WX-PUB-APP-ID', 'WX-PUB-APP-SECRET', query['code'])
+    openid, error = Pingpp::WxPubOauth.get_openid('WX_PUB_APP_ID', 'WX_PUB_APP_SECRET', query['code'])
     # ...
     # pass openid to extra['open_id'] and create a charge
     # ...

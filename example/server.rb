@@ -1,12 +1,17 @@
 require 'webrick'
 require 'json'
-require "digest/md5"
+require 'digest/md5'
 require 'pingpp'
+
+# 配置 API Key 和 App ID #
+# 从 Ping++ 管理平台应用信息里获取 #
+API_KEY = 'sk_test_ibbTe5jLGCi5rzfH4OqPW9KC' # 这里填入你的 Test/Live Key
+APP_ID = 'app_1Gqj58ynP0mHeX1q' # 这里填入你的应用 ID
 
 # 创建 charge
 class Pay < WEBrick::HTTPServlet::AbstractServlet
   def do_POST(request, response)
-    Pingpp.api_key = "YOUR-KEY"
+    Pingpp.api_key = API_KEY
     Pingpp.parse_headers(request.header)
     begin
       post_data = JSON.parse(request.body)
@@ -35,7 +40,6 @@ class Pay < WEBrick::HTTPServlet::AbstractServlet
       }
     when 'wx_pub'
       extra = {
-        'trade_type' => 'JSAPI',
         'open_id' => open_id
       }
     end
@@ -45,13 +49,13 @@ class Pay < WEBrick::HTTPServlet::AbstractServlet
     begin
       ch = Pingpp::Charge.create(
         :order_no  => order_no,
-        :app       => {'id' => "YOUR-APP-ID"},
+        :app       => {:id => APP_ID},
         :channel   => channel,
         :amount    => amount,
         :client_ip => client_ip,
         :currency  => 'cny',
-        :subject   => "Charge Subject",
-        :body      => "Charge Body",
+        :subject   => 'Charge Subject',
+        :body      => 'Charge Body',
         :extra     => extra
       )
       response_body = ch.to_json
@@ -59,36 +63,12 @@ class Pay < WEBrick::HTTPServlet::AbstractServlet
       response_body = error.http_body
     end
     response.status = 200
-    response['Content-Type'] = "application/json"
-    response.body = response_body
-  end
-end
-
-# 异步通知
-class Notify < WEBrick::HTTPServlet::AbstractServlet
-  def do_POST(request, response)
-    response_body = 'fail'
-    begin
-      post_data = JSON.parse(request.body)
-      if post_data['object'].nil?
-      elsif post_data['object'] == 'charge'
-        response_body = 'success'
-        # 开发者在此处加入对支付异步通知的处理代码
-      elsif post_data['object'] == 'refund'
-        response_body = 'success'
-        # 开发者在此处加入对退款异步通知的处理代码
-      end
-    rescue JSON::ParserError
-      response_body = 'fail'
-    end
-    response.status = 200
-    response['Content-Type'] = "text/plain"
+    response['Content-Type'] = 'application/json'
     response.body = response_body
   end
 end
 
 server = WEBrick::HTTPServer.new(:Port => 8000)
-server.mount "/pay", Pay
-server.mount "/notify", Notify
-trap "INT" do server.shutdown end
+server.mount '/pay', Pay
+trap 'INT' do server.shutdown end
 server.start
