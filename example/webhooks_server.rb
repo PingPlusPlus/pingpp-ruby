@@ -13,7 +13,7 @@ class Webhooks < WEBrick::HTTPServlet::AbstractServlet
         # 开发者在此处加入对支付异步通知的处理代码
         status = 200
         response_body = 'OK'
-      elsif event['object'] == 'refund.succeeded'
+      elsif event['type'] == 'refund.succeeded'
         # 开发者在此处加入对退款异步通知的处理代码
         status = 200
         response_body = 'OK'
