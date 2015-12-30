@@ -3,7 +3,7 @@
 require 'cgi'
 require 'set'
 require 'openssl'
-require 'rest_client'
+require 'rest-client'
 require 'json'
 
 # Version
@@ -21,7 +21,6 @@ require 'pingpp/pingpp_object'
 require 'pingpp/api_resource'
 require 'pingpp/singleton_api_resource'
 require 'pingpp/list_object'
-require 'pingpp/certificate_blacklist'
 require 'pingpp/charge'
 require 'pingpp/refund'
 require 'pingpp/red_envelope'
@@ -47,7 +46,6 @@ module Pingpp
 
   @ssl_bundle_path  = DEFAULT_CA_BUNDLE_PATH
   @verify_ssl_certs = true
-  @CERTIFICATE_VERIFIED = false
 
   HEADERS_TO_PARSE = [:pingpp_one_version, :pingpp_sdk_version]
 
@@ -92,15 +90,19 @@ module Pingpp
         'email support@pingxx.com if you have any questions.)')
     end
 
-    request_opts = { :verify_ssl => false, :ssl_version => 'TLSv1' }
-
-    if ssl_preflight_passed?
-      request_opts.update(:verify_ssl => OpenSSL::SSL::VERIFY_PEER,
-                          :ssl_ca_file => @ssl_bundle_path)
-    end
-
-    if @verify_ssl_certs and !@CERTIFICATE_VERIFIED
-      @CERTIFICATE_VERIFIED = CertificateBlacklist.check_ssl_cert(@api_base, @ssl_bundle_path)
+    if verify_ssl_certs
+      request_opts = {:verify_ssl => OpenSSL::SSL::VERIFY_PEER,
+                      :ssl_ca_file => @ssl_bundle_path,
+                      :ssl_version => 'TLSv1'}
+    else
+      request_opts = {:verify_ssl => false,
+                      :ssl_version => 'TLSv1'}
+      unless @verify_ssl_warned
+        @verify_ssl_warned = true
+        $stderr.puts("WARNING: Running without SSL cert verification. " \
+          "You should never do this in production. " \
+          "Execute 'Pingpp.verify_ssl_certs = true' to enable verification.")
+      end
     end
 
     params = Util.objects_to_ids(params)
@@ -145,23 +147,6 @@ module Pingpp
   end
 
   private
-
-  def self.ssl_preflight_passed?
-    if !verify_ssl_certs && !@no_verify
-      $stderr.puts "WARNING: Running without SSL cert verification. " +
-        "Execute 'Pingpp.verify_ssl_certs = true' to enable verification."
-
-      @no_verify = true
-
-    elsif !Util.file_readable(@ssl_bundle_path) && !@no_bundle
-      $stderr.puts "WARNING: Running without SSL cert verification " +
-        "because #{@ssl_bundle_path} isn't readable"
-
-      @no_bundle = true
-    end
-
-    !(@no_verify || @no_bundle)
-  end
 
   def self.user_agent
     @uname ||= get_uname
