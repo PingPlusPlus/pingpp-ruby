@@ -13,6 +13,10 @@ class Pay < WEBrick::HTTPServlet::AbstractServlet
   def do_POST(request, response)
     Pingpp.api_key = API_KEY
     Pingpp.parse_headers(request.header)
+
+    # 设置你的私钥路径，用于请求的签名，对应的公钥请填写到 Ping++ 管理平台
+    Pingpp.private_key_path = File.dirname(__FILE__) + '/your_rsa_private_key.pem'
+
     begin
       post_data = JSON.parse(request.body)
     rescue JSON::ParserError
@@ -23,13 +27,15 @@ class Pay < WEBrick::HTTPServlet::AbstractServlet
     open_id = post_data['open_id'] # 微信公众号时
     client_ip = request.remote_ip
     extra = {}
+
+    # 以下 channel 仅为部分需要 extra 参数的示例，详见 https://www.pingxx.com/document/api#api-c-new
     case channel
     when 'alipay_wap'
       extra = {
         'success_url' => 'http://www.yourdomain.com/success',
         'cancel_url'  => 'http://www.yourdomain.com/cancel'
       }
-    when 'upacp_wap', 'upmp_wap'
+    when 'upacp_wap'
       extra = {
         'result_url' => 'http://www.yourdomain.com/result?code='
       }
@@ -69,6 +75,6 @@ class Pay < WEBrick::HTTPServlet::AbstractServlet
 end
 
 server = WEBrick::HTTPServer.new(:Port => 8000)
-server.mount '/pay', Pay
+server.mount '/charge', Pay
 trap 'INT' do server.shutdown end
 server.start

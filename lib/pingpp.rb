@@ -5,6 +5,7 @@ require 'set'
 require 'openssl'
 require 'rest-client'
 require 'json'
+require 'base64'
 
 # Version
 require 'pingpp/version'
@@ -42,7 +43,7 @@ module Pingpp
   DEFAULT_CA_BUNDLE_PATH = File.dirname(__FILE__) + '/data/ca-certificates.crt'
   @api_base = 'https://api.pingxx.com'
 
-  @api_version = '2015-06-03'
+  @api_version = '2015-10-10'
 
   @ssl_bundle_path  = DEFAULT_CA_BUNDLE_PATH
   @verify_ssl_certs = true
@@ -50,7 +51,7 @@ module Pingpp
   HEADERS_TO_PARSE = [:pingpp_one_version, :pingpp_sdk_version]
 
   class << self
-    attr_accessor :api_key, :api_base, :verify_ssl_certs, :api_version, :parsed_headers
+    attr_accessor :api_key, :api_base, :verify_ssl_certs, :api_version, :parsed_headers, :private_key_path
   end
 
   def self.api_url(url='')
@@ -117,7 +118,7 @@ module Pingpp
       payload = JSON.generate(params)
     end
 
-    request_opts.update(:headers => request_headers(api_key, method.to_s.downcase.to_sym == :post).update(headers),
+    request_opts.update(:headers => request_headers(api_key, method.to_s.downcase.to_sym == :post, payload).update(headers),
                         :method => method, :open_timeout => 30,
                         :payload => payload, :url => url, :timeout => 80)
 
@@ -174,7 +175,7 @@ module Pingpp
       map { |k,v| "#{k}=#{Util.url_encode(v)}" }.join('&')
   end
 
-  def self.request_headers(api_key, is_post=false)
+  def self.request_headers(api_key, is_post=false, data=nil)
     headers = {
       :user_agent => "Pingpp/v1 RubyBindings/#{Pingpp::VERSION}",
       :authorization => "Bearer #{api_key}",
@@ -190,6 +191,13 @@ module Pingpp
       headers.update(:x_pingpp_client_raw_user_agent => user_agent.inspect,
                      :error => "#{e} (#{e.class})")
     end
+
+    if is_post && private_key_path && data
+      signature = sign_request(data, private_key_path)
+      headers.update(:pingplusplus_signature => signature)
+    end
+
+    headers
   end
 
   def self.execute_request(opts)
@@ -206,6 +214,11 @@ module Pingpp
     end
 
     Util.symbolize_names(response)
+  end
+
+  def self.sign_request(data, key_path)
+    pkey = OpenSSL::PKey.read(File.read(key_path))
+    return Base64.strict_encode64(pkey.sign(OpenSSL::Digest::SHA256.new, data))
   end
 
   def self.general_api_error(rcode, rbody)

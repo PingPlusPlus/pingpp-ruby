@@ -9,39 +9,19 @@ def verify_signature(raw_data, signature, pub_key_path)
   return rsa_public_key.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), raw_data)
 end
 
-def get_headers(original_headers)
-  new_headers = {}
-  original_headers.each do |k, h|
-    new_k = k.split('-').select {|w| w.capitalize! || w }.join('-');
-    header = nil
-    if h.is_a?(Array) && h.length > 0
-      header = h[0]
-    else h.is_a?(String)
-      header = h
-    end
-
-    if header
-      new_headers[new_k] = header
-    end
-  end
-
-  return new_headers
-end
-
 class Webhooks < WEBrick::HTTPServlet::AbstractServlet
   def do_POST(request, response)
-
-    # header 的 key 做格式化处理
+    # header 的 key 做格式化处理，并且转成 Symbol
     headers = get_headers(request.header)
 
     # 签名在头部信息的 x-pingplusplus-signature 字段
-    if !headers.has_key?('X-Pingplusplus-Signature')
+    if !headers.has_key?(:x_pingplusplus_signature)
       response.status = 401
       return
     end
     # 原始请求数据是待验签数据，请根据实际情况获取
     raw_data = request.body
-    signature = headers['X-Pingplusplus-Signature']
+    signature = headers[:x_pingplusplus_signature]
     # 请从 https://dashboard.pingxx.com 获取「Ping++ 公钥」
     pub_key_path = File.dirname(__FILE__) + '/pingpp_rsa_public_key.pem'
 
@@ -74,6 +54,35 @@ class Webhooks < WEBrick::HTTPServlet::AbstractServlet
       response.status = 403
     end
   end
+end
+
+# 格式化 key
+def get_headers(original_headers)
+  new_headers = {}
+  if !original_headers.respond_to?("each")
+    return nil
+  end
+
+  original_headers.each do |k, h|
+    if k.is_a?(Symbol)
+      k = k.to_s
+    end
+    k = k[0, 5] == 'HTTP_' ? k[5..-1] : k
+    new_k = k.gsub(/-/, '_').downcase.to_sym
+
+    header = nil
+    if h.is_a?(Array) && h.length > 0
+      header = h[0]
+    elsif h.is_a?(String)
+      header = h
+    end
+
+    if header
+      new_headers[new_k] = header
+    end
+  end
+
+  return new_headers
 end
 
 server = WEBrick::HTTPServer.new(:Port => 8000)
