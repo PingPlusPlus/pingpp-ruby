@@ -26,6 +26,13 @@ require "pingpp"
 Pingpp.api_key = "YOUR-KEY"
 ```
 
+### 设置请求签名密钥
+密钥需要你自己生成，公钥请填写到 [Ping++ Dashboard](https://dashboard.pingxx.com)  
+设置你的私钥路径
+``` ruby
+Pingpp.private_key_path = '/path/to/your_rsa_private_key.pem'
+```
+
 ### 支付
 ``` ruby
 Pingpp::Charge.create(
