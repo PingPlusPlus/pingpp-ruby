@@ -269,7 +269,7 @@ module Pingpp
   def self.handle_restclient_error(e)
     connection_message = "Please check your internet connection and try again. " \
         "If this problem persists, you should check Pingpp's service status at " \
-        "https://pingxx.com, or let us know at support@pingxx.com."
+        "https://www.pingxx.com/status"
 
     case e
     when RestClient::RequestTimeout
@@ -282,8 +282,7 @@ module Pingpp
     when RestClient::SSLCertificateNotVerified
       message = "Could not verify Pingpp's SSL certificate. " \
         "Please make sure that your network is not intercepting certificates. " \
-        "(Try going to (#{@api_base}) in your browser.) " \
-        "If this problem persists, let us know at support@pingxx.com."
+        "(Try going to (#{@api_base}) in your browser.)"
 
     when SocketError
       message = "Unexpected error communicating when trying to connect to Pingpp. " \
@@ -291,8 +290,7 @@ module Pingpp
         "To check, try running 'host pingxx.com' from the command line."
 
     else
-      message = "Unexpected error communicating with Pingpp. " \
-        "If this problem persists, let us know at support@pingxx.com."
+      message = "Unexpected error communicating with Pingpp."
 
     end
 
