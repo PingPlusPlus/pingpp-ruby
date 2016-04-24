@@ -1,3 +1,7 @@
+### 2.0.12
+* 修改：  
+允许用字符串方式设置私钥，而非私钥路径 `Pingpp.private_key = 'PRIVATE KEY CONTENTS'`
+
 ### 2.0.9
 * 新增：  
 添加请求签名

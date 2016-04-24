@@ -8,6 +8,11 @@ APP_ID = "app_1Gqj58ynP0mHeX1q" # 这里填入你的应用 ID
 
 Pingpp.api_key = API_KEY
 
+# 设置你的私钥路径，用于请求的签名，对应的公钥请填写到 Ping++ 管理平台
+Pingpp.private_key_path = File.dirname(__FILE__) + '/your_rsa_private_key.pem'
+# 或者直接设置私钥字符串
+# Pingpp.private_key = 'PEM 格式的私钥字符串'
+
 channel = "alipay" # 选择渠道
 extra = {}
 # 特定渠道发起交易时需要的额外参数 extra，下面以 alipay_wap 和 upacp_wap 为例

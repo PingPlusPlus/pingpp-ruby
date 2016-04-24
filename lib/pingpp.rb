@@ -51,7 +51,7 @@ module Pingpp
   HEADERS_TO_PARSE = [:pingpp_one_version, :pingpp_sdk_version]
 
   class << self
-    attr_accessor :api_key, :api_base, :verify_ssl_certs, :api_version, :parsed_headers, :private_key_path
+    attr_accessor :api_key, :api_base, :verify_ssl_certs, :api_version, :parsed_headers, :private_key
   end
 
   def self.api_url(url='')
@@ -80,15 +80,13 @@ module Pingpp
       raise AuthenticationError.new('No API key provided. ' +
         'Set your API key using "Pingpp.api_key = <API-KEY>". ' +
         'You can generate API keys from the Pingpp web interface. ' +
-        'See https://pingxx.com/document/api for details, or email support@pingxx.com ' +
-        'if you have any questions.')
+        'See https://pingxx.com/document/api for details.')
     end
 
     if api_key =~ /\s/
       raise AuthenticationError.new('Your API key is invalid, as it contains ' +
         'whitespace. (HINT: You can double-check your API key from the ' +
-        'Pingpp web interface. See https://pingxx.com/document/api for details, or ' +
-        'email support@pingxx.com if you have any questions.)')
+        'Pingpp web interface. See https://pingxx.com/document/api for details.)')
     end
 
     if verify_ssl_certs
@@ -192,8 +190,8 @@ module Pingpp
                      :error => "#{e} (#{e.class})")
     end
 
-    if is_post && private_key_path && data
-      signature = sign_request(data, private_key_path)
+    if is_post && private_key && data
+      signature = sign_request(data, private_key)
       headers.update(:pingplusplus_signature => signature)
     end
 
@@ -216,8 +214,12 @@ module Pingpp
     Util.symbolize_names(response)
   end
 
-  def self.sign_request(data, key_path)
-    pkey = OpenSSL::PKey.read(File.read(key_path))
+  def self.private_key_path=(private_key_path)
+    @private_key = File.read(private_key_path)
+  end
+
+  def self.sign_request(data, pri_key)
+    pkey = OpenSSL::PKey.read(pri_key)
     return Base64.strict_encode64(pkey.sign(OpenSSL::Digest::SHA256.new, data))
   end
 
