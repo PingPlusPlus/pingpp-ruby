@@ -27,6 +27,7 @@ require 'pingpp/refund'
 require 'pingpp/red_envelope'
 require 'pingpp/event'
 require 'pingpp/transfer'
+require 'pingpp/notify'
 
 # Errors
 require 'pingpp/errors/pingpp_error'
@@ -51,7 +52,7 @@ module Pingpp
   HEADERS_TO_PARSE = [:pingpp_one_version, :pingpp_sdk_version]
 
   class << self
-    attr_accessor :api_key, :api_base, :verify_ssl_certs, :api_version, :parsed_headers, :private_key
+    attr_accessor :api_key, :api_base, :verify_ssl_certs, :api_version, :parsed_headers, :private_key, :pub_key
   end
 
   def self.api_url(url='')
@@ -216,6 +217,10 @@ module Pingpp
 
   def self.private_key_path=(private_key_path)
     @private_key = File.read(private_key_path)
+  end
+
+  def self.pub_key_path=(pub_key_path)
+    @pub_key = File.read(pub_key_path)
   end
 
   def self.sign_request(data, pri_key)
