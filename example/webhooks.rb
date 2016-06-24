@@ -1,3 +1,9 @@
+=begin
+  Ping++ Server SDK 说明：
+  以下代码只是为了方便商户测试而提供的样例代码，商户可根据自己网站需求按照技术文档编写, 并非一定要使用该代码。
+  接入 webhooks 流程参考开发者中心：https://www.pingxx.com/docs/webhooks/webhooks
+  该代码仅供学习和研究 Ping++ SDK 使用，仅供参考。
+=end
 require 'webrick'
 require 'json'
 require 'OpenSSL'
@@ -22,7 +28,7 @@ class Webhooks < WEBrick::HTTPServlet::AbstractServlet
     # 原始请求数据是待验签数据，请根据实际情况获取
     raw_data = request.body
     signature = headers[:x_pingplusplus_signature]
-    # 请从 https://dashboard.pingxx.com 获取「Ping++ 公钥」
+    # Ping++ 公钥，获取路径：登录 [Dashboard](https://dashboard.pingxx.com)->点击管理平台右上角公司名称->开发信息-> Ping++ 公钥
     pub_key_path = File.dirname(__FILE__) + '/pingpp_rsa_public_key.pem'
 
     if verify_signature(raw_data, signature, pub_key_path)
