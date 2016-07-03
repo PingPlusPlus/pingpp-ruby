@@ -1,4 +1,4 @@
-Pingpp Ruby SDK 
+Pingpp Ruby SDK
 =================
 ****
 
@@ -21,9 +21,14 @@ gem install pingpp-<VERSION>.gem
 
 ## 接入方法
 ### 初始化
+
+在 `config/initializers` 目录下创建 pingxx.rb 文件。
+
 ``` ruby
 require "pingpp"
 Pingpp.api_key = "YOUR-KEY"
+Pingpp.private_key_path = "/path/to/your_rsa_private_key.pem"
+Pingpp.pub_key_path = "/path/to/your_pingpp_rsa_public_key.pem"
 ```
 
 ### 设置请求签名密钥
@@ -45,6 +50,12 @@ Pingpp::Charge.create(
   :subject   => "Your Subject",
   :body      => "Your Body"
 )
+```
+
+### 验证回调
+```ruby
+Pingpp::Notify.verify?(request) # 验证回调
+JSON.parse(request.raw_post) # 解析回调内容
 ```
 
 ### 查询
