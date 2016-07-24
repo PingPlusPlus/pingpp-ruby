@@ -19,7 +19,10 @@ module Pingpp
       @object_classes ||= {
         'charge' => Charge,
         'list' => ListObject,
-        'refund' => Refund
+        'refund' => Refund,
+        'red_envelope' => RedEnvelope,
+        'transfer' => Transfer,
+        'event' => Event
       }
     end
 
@@ -95,6 +98,34 @@ module Pingpp
         end
       end
       result
+    end
+
+    def self.format_headers(original_headers)
+      new_headers = {}
+      if !original_headers.respond_to?("each")
+        return nil
+      end
+
+      original_headers.each do |k, h|
+        if k.is_a?(Symbol)
+          k = k.to_s
+        end
+        k = k[0, 5] == 'HTTP_' ? k[5..-1] : k
+        new_k = k.gsub(/-/, '_').downcase.to_sym
+
+        header = nil
+        if h.is_a?(Array) && h.length > 0
+          header = h[0]
+        elsif h.is_a?(String)
+          header = h
+        end
+
+        if header
+          new_headers[new_k] = header
+        end
+      end
+
+      return new_headers
     end
   end
 end

@@ -21,14 +21,11 @@ gem install pingpp-<VERSION>.gem
 
 ## 接入方法
 ### 初始化
-
-在 `config/initializers` 目录下创建 pingxx.rb 文件。
+如果你使用的是 Ruby on Rails，可以在 `config/initializers` 目录下创建 pingxx.rb 文件。
 
 ``` ruby
 require "pingpp"
 Pingpp.api_key = "YOUR-KEY"
-Pingpp.private_key_path = "/path/to/your_rsa_private_key.pem"
-Pingpp.pub_key_path = "/path/to/your_pingpp_rsa_public_key.pem"
 ```
 
 ### 设置请求签名密钥
@@ -36,6 +33,13 @@ Pingpp.pub_key_path = "/path/to/your_pingpp_rsa_public_key.pem"
 设置你的私钥路径
 ``` ruby
 Pingpp.private_key_path = '/path/to/your_rsa_private_key.pem'
+```
+
+### 设置 Ping++ 公钥
+公钥请登录 [Ping++ Dashboard](https://dashboard.pingxx.com) 获取  
+设置你的 Ping++ 公钥路径
+``` ruby
+Pingpp.pub_key_path = "/path/to/pingpp_rsa_public_key.pem"
 ```
 
 ### 支付
@@ -52,10 +56,10 @@ Pingpp::Charge.create(
 )
 ```
 
-### 验证回调
+### 验证 Webhooks
 ```ruby
-Pingpp::Notify.verify?(request) # 验证回调
-JSON.parse(request.raw_post) # 解析回调内容
+Pingpp::Webhook.verify?(request) # 验证回调
+JSON.parse(request.raw_post) # 解析回调内容（Ruby on Rails）
 ```
 
 ### 查询

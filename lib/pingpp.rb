@@ -27,7 +27,7 @@ require 'pingpp/refund'
 require 'pingpp/red_envelope'
 require 'pingpp/event'
 require 'pingpp/transfer'
-require 'pingpp/notify'
+require 'pingpp/webhook'
 
 # Errors
 require 'pingpp/errors/pingpp_error'
