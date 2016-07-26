@@ -140,12 +140,39 @@ Pingpp::Transfer.create(
   :description => "Your Description"
 )
 ```
+
 ### 企业付款查询
 ``` ruby
 Pingpp::Transfer.retrieve("TRANSFER_ID")
 ```
 ``` ruby
 Pingpp::Transfer.all(:limit => 5)
+```
+
+### 身份证认证
+``` ruby
+Pingpp::Identification.identify(
+  :type => "id_card",
+  :app  => APP_ID,
+  :data => {
+      :id_name => "张三", # 姓名
+      :id_number => "310181198910107641" # 身份证号
+  }
+)
+```
+
+### 银行卡认证
+``` ruby
+Pingpp::Identification.identify(
+  :type  => "bank_card",
+  :app  => APP_ID,
+  :data => {
+      :id_name => "张三", # 姓名
+      :id_number => "310181198910107641", # 身份证号
+      :card_number => "6201111122223333", # 银行卡号
+      :phone_number => "18623234545" # 银行预留手机号，不支持 178 号段
+  }
+)
 ```
 
 **详细信息请参考 [API 文档](https://pingxx.com/document/api?ruby)。**
