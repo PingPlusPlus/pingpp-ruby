@@ -118,7 +118,7 @@ module Pingpp
       payload = JSON.generate(params)
     end
 
-    request_opts.update(:headers => request_headers(api_key, method.to_s.downcase.to_sym == :post, payload).update(headers),
+    request_opts.update(:headers => request_headers(api_key, method.to_s.downcase.to_sym, payload).update(headers),
                         :method => method, :open_timeout => 30,
                         :payload => payload, :url => url, :timeout => 80)
 
@@ -175,11 +175,12 @@ module Pingpp
       map { |k,v| "#{k}=#{Util.url_encode(v)}" }.join('&')
   end
 
-  def self.request_headers(api_key, is_post=false, data=nil)
+  def self.request_headers(api_key, method_sym, data=nil)
+    post_or_put = (method_sym == :post or method_sym == :put)
     headers = {
       :user_agent => "Pingpp/v1 RubyBindings/#{Pingpp::VERSION}",
       :authorization => "Bearer #{api_key}",
-      :content_type => is_post ? 'application/json' : 'application/x-www-form-urlencoded'
+      :content_type => post_or_put ? 'application/json' : 'application/x-www-form-urlencoded'
     }
 
     headers[:pingplusplus_version] = api_version if api_version
@@ -192,7 +193,7 @@ module Pingpp
                      :error => "#{e} (#{e.class})")
     end
 
-    if is_post && private_key && data
+    if post_or_put && private_key && data
       signature = sign_request(data, private_key)
       headers.update(:pingplusplus_signature => signature)
     end

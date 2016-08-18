@@ -1,6 +1,13 @@
 module Pingpp
   module APIOperations
     module Update
+      module ClassMethods
+        def update(id, params={}, api_key=nil)
+          response, opts = Pingpp.request(:put, "#{self.url}/#{id}", api_key, params)
+          Util.convert_to_pingpp_object(response, opts)
+        end
+      end
+
       def save(opts={})
         values = serialize_params(self).merge(opts)
 
@@ -11,7 +18,7 @@ module Pingpp
         if values.length > 0
           values.delete(:id)
 
-          response, api_key = Pingpp.request(:post, url, @api_key, values)
+          response, api_key = Pingpp.request(:put, url, @api_key, values)
           refresh_from(response, api_key)
         end
         self
@@ -51,6 +58,10 @@ module Pingpp
         else
           obj
         end
+      end
+
+      def self.included(base)
+        base.extend(ClassMethods)
       end
     end
   end

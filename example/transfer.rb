@@ -33,3 +33,9 @@ puts transfer
 ## 查询列表
 transfers = Pingpp::Transfer.all(:limit => 5)
 puts transfers
+
+## 取消 Transfer（仅限 unionpay 渠道）
+Pingpp::Transfer.update(
+    "tr_SmLiPOufXjLKvLCqjHeH0OiL",
+    { :status => "canceled" }
+)
