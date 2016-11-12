@@ -1,7 +1,7 @@
 module Pingpp
   module Webhook
-    def self.verify?(request)
-      if !Pingpp.pub_key
+    def self.verify?(request, pub_key=Pingpp.pub_key)
+      if !pub_key
         return false
       end
 
@@ -27,7 +27,7 @@ module Pingpp
       return false if !formated_headers.has_key?(:x_pingplusplus_signature)
 
       signature = formated_headers[:x_pingplusplus_signature]
-      rsa_public_key = OpenSSL::PKey.read(Pingpp.pub_key)
+      rsa_public_key = OpenSSL::PKey.read(pub_key)
       return rsa_public_key.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), raw_data)
     end
   end
