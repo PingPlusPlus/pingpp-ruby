@@ -8,7 +8,3 @@ Pingpp.api_key = API_KEY
 # retrieve an event
 evt = Pingpp::Event.retrieve("evt_VzWdLFbm5D6OdOuzQv7oqF0X")
 puts evt
-
-# list all events
-evts = Pingpp::Event.all(:limit => 3)
-puts evts
