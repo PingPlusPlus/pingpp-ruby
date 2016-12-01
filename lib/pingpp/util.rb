@@ -22,17 +22,19 @@ module Pingpp
         'refund' => Refund,
         'red_envelope' => RedEnvelope,
         'transfer' => Transfer,
-        'event' => Event
+        'batch_refund' => BatchRefund,
+        'batch_transfer' => BatchTransfer,
+        'customs' => Customs
       }
     end
 
-    def self.convert_to_pingpp_object(resp, api_key)
+    def self.convert_to_pingpp_object(resp, opts)
       case resp
       when Array
-        resp.map { |i| convert_to_pingpp_object(i, api_key) }
+        resp.map { |i| convert_to_pingpp_object(i, opts) }
       when Hash
         # Try converting to a known object class.  If none available, fall back to generic PingppObject
-        object_classes.fetch(resp[:object], PingppObject).construct_from(resp, api_key)
+        object_classes.fetch(resp[:object], PingppObject).construct_from(resp, opts)
       else
         resp
       end
@@ -68,13 +70,13 @@ module Pingpp
     end
 
     def self.url_encode(key)
-      URI.escape(key.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
+      CGI.escape(key.to_s).gsub('%5B', '[').gsub('%5D', ']')
     end
 
     def self.flatten_params(params, parent_key=nil)
       result = []
       params.each do |key, value|
-        calculated_key = parent_key ? "#{parent_key}[#{url_encode(key)}]" : url_encode(key)
+        calculated_key = parent_key ? "#{parent_key}[#{key}]" : "#{key}"
         if value.is_a?(Hash)
           result += flatten_params(value, calculated_key)
         elsif value.is_a?(Array)
@@ -126,6 +128,50 @@ module Pingpp
       end
 
       return new_headers
+    end
+
+    def self.encode_parameters(params)
+      Util.flatten_params(params).
+        map { |k,v| "#{url_encode(k)}=#{url_encode(v)}" }.join('&')
+    end
+
+    def self.normalize_id(id)
+      if id.kind_of?(Hash) # overloaded id
+        params_hash = id.dup
+        id = params_hash.delete(:id)
+      else
+        params_hash = {}
+      end
+      [id, params_hash]
+    end
+
+    def self.normalize_opts(opts)
+      case opts
+      when String
+        {:api_key => opts}
+      when Hash
+        check_api_key!(opts.fetch(:api_key)) if opts.has_key?(:api_key)
+        check_app!(opts.fetch(:app)) if opts.has_key?(:app)
+        check_user!(opts.fetch(:user)) if opts.has_key?(:user)
+        opts.clone
+      else
+        raise TypeError.new('normalize_opts expects a string or a hash')
+      end
+    end
+
+    def self.check_api_key!(key)
+      raise TypeError.new("api_key must be a string") unless key.is_a?(String)
+      key
+    end
+
+    def self.check_app!(app)
+      raise TypeError.new("app must be a string") unless app.is_a?(String)
+      app
+    end
+
+    def self.check_user!(user)
+      raise TypeError.new("user must be a string") unless user.is_a?(String)
+      user
     end
   end
 end

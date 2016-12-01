@@ -1,16 +1,14 @@
 module Pingpp
   module APIOperations
     module List
-      module ClassMethods
-        def all(filters={}, api_key=nil)
-          response, api_key = Pingpp.request(:get, url, api_key, filters)
-          Util.convert_to_pingpp_object(response, api_key)
-        end
+      def list(filters={}, opts={})
+        opts = Util.normalize_opts(opts)
+
+        response, opts = request(:get, resource_url(opts), filters, opts)
+        ListObject.construct_from(response, opts)
       end
 
-      def self.included(base)
-        base.extend(ClassMethods)
-      end
+      alias :all :list
     end
   end
 end

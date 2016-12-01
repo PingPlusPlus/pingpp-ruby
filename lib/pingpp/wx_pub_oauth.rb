@@ -9,7 +9,7 @@ module Pingpp
         'response_type' => 'code',
         'scope' => more_info ? 'snsapi_userinfo' : 'snsapi_base'
       }
-      query_str = Pingpp.uri_encode(query_parts)
+      query_str = Util.encode_parameters(query_parts)
       'https://open.weixin.qq.com/connect/oauth2/authorize?' + query_str + '#wechat_redirect'
     end
 
@@ -30,7 +30,7 @@ module Pingpp
         'code' => code,
         'grant_type' => 'authorization_code'
       }
-      query_str = Pingpp.uri_encode(query_parts)
+      query_str = Util.encode_parameters(query_parts)
       'https://api.weixin.qq.com/sns/oauth2/access_token?' + query_str
     end
 
@@ -54,7 +54,7 @@ module Pingpp
         'secret' => app_secret,
         'grant_type' => 'client_credential'
       }
-      query_str = Pingpp.uri_encode(query_parts)
+      query_str = Util.encode_parameters(query_parts)
       access_token_url = 'https://api.weixin.qq.com/cgi-bin/token?' + query_str
       resp = get_request(access_token_url)
       if !resp['errcode'].nil? then
@@ -64,9 +64,11 @@ module Pingpp
         'access_token' => resp['access_token'],
         'type' => 'jsapi'
       }
-      query_str = Pingpp.uri_encode(query_parts)
+      query_str = Util.encode_parameters(query_parts)
       jsapi_ticket_url = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?' + query_str
       jsapi_ticket = get_request(jsapi_ticket_url)
+
+      return jsapi_ticket
     end
 
     def self.get_signature(charge, jsapi_ticket, url)
@@ -81,6 +83,8 @@ module Pingpp
         'url=' + url.split('#')[0]
       ]
       signature = Digest::SHA1.hexdigest(array_to_sign.join('&'))
+
+      return signature
     end
   end
 end

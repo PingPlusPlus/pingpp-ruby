@@ -2,25 +2,17 @@ module Pingpp
   class PingppObject
     include Enumerable
 
-    attr_accessor :api_key
-    @@permanent_attributes = Set.new([:api_key, :id])
+    @@permanent_attributes = Set.new([:id])
 
     # The default :id method is deprecated and isn't useful to us
     if method_defined?(:id)
       undef :id
     end
 
-    def initialize(id=nil, api_key=nil)
-      # parameter overloading!
-      if id.kind_of?(Hash)
-        @retrieve_options = id.dup
-        @retrieve_options.delete(:id)
-        id = id[:id]
-      else
-        @retrieve_options = {}
-      end
-
-      @api_key = api_key
+    def initialize(id=nil, opts={})
+      id, @retrieve_params = Util.normalize_id(id)
+      @opts = Util.normalize_opts(opts)
+      @original_values = {}
       @values = {}
       # This really belongs in APIResource, but not putting it there allows us
       # to have a unified inspect method
@@ -29,8 +21,13 @@ module Pingpp
       @values[:id] = id if id
     end
 
-    def self.construct_from(values, api_key=nil)
-      self.new(values[:id], api_key).refresh_from(values, api_key)
+    def self.construct_from(values, opts={})
+      values = Pingpp::Util.symbolize_names(values)
+      self.new(values[:id]).send(:initialize_from, values, opts)
+    end
+
+    def ==(other)
+      other.is_a?(PingppObject) && @values == other.instance_variable_get(:@values)
     end
 
     def to_s(*args)
@@ -42,30 +39,11 @@ module Pingpp
       "#<#{self.class}:0x#{self.object_id.to_s(16)}#{id_string}> JSON: " + JSON.pretty_generate(@values)
     end
 
-    def refresh_from(values, api_key, partial=false)
-      @api_key = api_key
-
-      @previous_metadata = values[:metadata]
-      removed = partial ? Set.new : Set.new(@values.keys - values.keys)
-      added = Set.new(values.keys - @values.keys)
-
-      instance_eval do
-        remove_accessors(removed)
-        add_accessors(added)
-      end
-      removed.each do |k|
-        @values.delete(k)
-        @transient_values.add(k)
-        @unsaved_values.delete(k)
-      end
-      values.each do |k, v|
-        @values[k] = Util.convert_to_pingpp_object(v, api_key)
-        @transient_values.delete(k)
-        @unsaved_values.delete(k)
-      end
-
-      return self
+    def refresh_from(values, opts, partial=false)
+      initialize_from(values, opts, partial)
     end
+    extend Gem::Deprecate
+    deprecate :refresh_from, "#initialize_from", 2017, 01
 
     def [](k)
       @values[k.to_sym]
@@ -103,12 +81,12 @@ module Pingpp
     end
 
     def _dump(level)
-      Marshal.dump([@values, @api_key])
+      Marshal.dump([@values, @opts])
     end
 
     def self._load(args)
-      values, api_key = Marshal.load(args)
-      construct_from(values, api_key)
+      values, opts = Marshal.load(args)
+      construct_from(values, opts)
     end
 
     if RUBY_VERSION < '1.9.2'
@@ -117,15 +95,37 @@ module Pingpp
       end
     end
 
+    def serialize_params(options = {})
+      update_hash = {}
+
+      @values.each do |k, v|
+        unsaved = @unsaved_values.include?(k)
+        if options[:force] || unsaved || v.is_a?(PingppObject)
+          update_hash[k.to_sym] =
+            serialize_params_value(@values[k], @original_values[k], unsaved, options[:force])
+        end
+      end
+
+      update_hash.reject! { |_, v| v == nil }
+
+      update_hash
+    end
+
     protected
 
     def metaclass
       class << self; self; end
     end
 
+    def protected_fields
+      []
+    end
+
     def remove_accessors(keys)
+      f = protected_fields
       metaclass.instance_eval do
         keys.each do |k|
+          next if f.include?(k)
           next if @@permanent_attributes.include?(k)
           k_eq = :"#{k}="
           remove_method(k) if method_defined?(k)
@@ -134,9 +134,11 @@ module Pingpp
       end
     end
 
-    def add_accessors(keys)
+    def add_accessors(keys, values)
+      f = protected_fields
       metaclass.instance_eval do
         keys.each do |k|
+          next if f.include?(k)
           next if @@permanent_attributes.include?(k)
           k_eq = :"#{k}="
           define_method(k) { @values[k] }
@@ -147,8 +149,14 @@ module Pingpp
                 "We interpret empty strings as nil in requests." +
                 "You may set #{self}.#{k} = nil to delete the property.")
             end
-            @values[k] = v
+            @values[k] = Util.convert_to_pingpp_object(v, @opts)
+            dirty_value!(@values[k])
             @unsaved_values.add(k)
+          end
+
+          if [FalseClass, TrueClass].include?(values[k].class)
+            k_bool = :"#{k}?"
+            define_method(k_bool) { @values[k] }
           end
         end
       end
@@ -158,7 +166,7 @@ module Pingpp
       # TODO: only allow setting in updateable classes.
       if name.to_s.end_with?('=')
         attr = name.to_s[0...-1].to_sym
-        add_accessors([attr])
+        add_accessors([attr], {})
         begin
           mth = method(name)
         rescue NameError
@@ -182,6 +190,100 @@ module Pingpp
 
     def respond_to_missing?(symbol, include_private = false)
       @values && @values.has_key?(symbol) || super
+    end
+
+    def update_attributes(values, opts = {}, method_options = {})
+      dirty = method_options.fetch(:dirty, true)
+      values.each do |k, v|
+        add_accessors([k], values) unless metaclass.method_defined?(k.to_sym)
+        @values[k] = Util.convert_to_pingpp_object(v, opts)
+        dirty_value!(@values[k]) if dirty
+        @unsaved_values.add(k)
+      end
+    end
+
+    def initialize_from(values, opts, partial=false)
+      @opts = Util.normalize_opts(opts)
+      @original_values = Marshal.load(Marshal.dump(values)) # deep copy
+
+      removed = partial ? Set.new : Set.new(@values.keys - values.keys)
+      added = Set.new(values.keys - @values.keys)
+
+      instance_eval do
+        remove_accessors(removed)
+        add_accessors(added, values)
+      end
+
+      removed.each do |k|
+        @values.delete(k)
+        @transient_values.add(k)
+        @unsaved_values.delete(k)
+      end
+
+      update_attributes(values, opts, :dirty => false)
+      values.each do |k, _|
+        @transient_values.delete(k)
+        @unsaved_values.delete(k)
+      end
+
+      self
+    end
+
+    def serialize_params_value(value, original, unsaved, force)
+      case true
+      when value == nil
+        ''
+
+      when value.is_a?(APIResource) && !value.save_with_parent
+        nil
+
+      when value.is_a?(Array)
+        update = value.map { |v| serialize_params_value(v, nil, true, force) }
+
+        # This prevents an array that's unchanged from being resent.
+        if update != serialize_params_value(original, nil, true, force)
+          update
+        else
+          nil
+        end
+
+      when value.is_a?(Hash)
+        Util.convert_to_pingpp_object(value, @opts).serialize_params
+
+      when value.is_a?(PingppObject)
+        update = value.serialize_params(:force => force)
+        update = empty_values(original).merge(update) if original && unsaved
+
+        update
+
+      else
+        value
+      end
+    end
+
+    private
+
+    def dirty_value!(value)
+      case value
+      when Array
+        value.map { |v| dirty_value!(v) }
+      when PingppObject
+        value.dirty!
+      end
+    end
+
+    def empty_values(obj)
+      values = case obj
+      when Hash         then obj
+      when PingppObject then obj.instance_variable_get(:@values)
+      else
+        raise ArgumentError, "#empty_values got unexpected object type: #{obj.class.name}"
+      end
+
+      values.inject({}) do |update, (k, _)|
+        update[k] = ''
+        update
+      end
     end
   end
 end

@@ -1,7 +1,16 @@
 source "https://rubygems.org"
+
 gemspec
 
-if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('1.9.3')
-  gem 'rest-client', '~> 1.6.8'
-  gem 'activesupport', '~> 3.2'
+group :development do
+  gem 'rake'
+  gem 'mocha', '~> 0.13.2'
+  gem 'shoulda-context'
+  gem 'test-unit'
+  gem 'pry'
+
+  if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.0.0')
+    gem 'rest-client', '1.8.0'
+    gem 'mime-types', '2.6.2'
+  end
 end

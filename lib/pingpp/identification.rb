@@ -1,12 +1,12 @@
 module Pingpp
   class Identification < APIResource
-    include Pingpp::APIOperations::Create
+    extend Pingpp::APIOperations::Create
 
-    def self.identify(params={}, api_key=nil)
-        create(params, api_key)
+    def self.identify(params={}, opts={})
+        create(params, opts)
     end
 
-    def self.url
+    def self.resource_url(opts={})
       '/v1/identification'
     end
 

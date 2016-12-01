@@ -1,5 +1,8 @@
 module Pingpp
   class ListObject < PingppObject
+    include Pingpp::APIOperations::List
+    include Pingpp::APIOperations::Request
+    include Pingpp::APIOperations::Create
 
     def [](k)
       case k
@@ -14,22 +17,19 @@ module Pingpp
       self.data.each(&blk)
     end
 
-    def retrieve(id, api_key=nil)
-      api_key ||= @api_key
-      response, api_key = Pingpp.request(:get,"#{url}/#{CGI.escape(id)}", api_key)
-      Util.convert_to_pingpp_object(response, api_key)
+    def empty?
+      self.data.empty?
     end
 
-    def create(params={}, api_key=nil)
-      api_key ||= @api_key
-      response, api_key = Pingpp.request(:post, url, api_key, params)
-      Util.convert_to_pingpp_object(response, api_key)
+    def retrieve(id, opts={})
+      id, retrieve_params = Util.normalize_id(id)
+      response, opts = request(:get, "#{resource_url(opts)}/#{CGI.escape(id)}", retrieve_params, opts)
+      Util.convert_to_pingpp_object(response, opts)
     end
 
-    def all(params={}, api_key=nil)
-      api_key ||= @api_key
-      response, api_key = Pingpp.request(:get, url, api_key, params)
-      Util.convert_to_pingpp_object(response, api_key)
+    def resource_url(opts={})
+      self.url ||
+        raise(ArgumentError, "List object does not contain a 'url' field.")
     end
   end
 end

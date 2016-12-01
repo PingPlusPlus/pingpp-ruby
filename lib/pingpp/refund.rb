@@ -1,14 +1,23 @@
 module Pingpp
   class Refund < APIResource
-    include Pingpp::APIOperations::Update
-    include Pingpp::APIOperations::List
+    extend Pingpp::APIOperations::Create
+    extend Pingpp::APIOperations::List
 
-    def url
-      "#{Charge.url}/#{CGI.escape(charge)}/refunds/#{CGI.escape(id)}"
+    def self.retrieve(charge, id, opts={})
+      opts[:parents] = ['charges', charge]
+      super(id, opts)
     end
 
-    def self.retrieve(id, api_key=nil)
-      raise NotImplementedError.new("Refunds cannot be retrieved without a charge ID. Retrieve a refund using charge.refunds.retrieve('refund_id')")
+    def self.create(charge, params, opts={})
+      opts[:parents] = ['charges', charge]
+      super(params, opts)
     end
+
+    def self.list(charge, filters={}, opts={})
+      opts[:parents] = ['charges', charge]
+      super(filters, opts)
+    end
+
+    singleton_class.send(:alias_method, :all, :list)
   end
 end

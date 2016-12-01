@@ -1,15 +1,10 @@
 module Pingpp
-  class RedEnvelope < APIResource
+  class Customs < APIResource
     extend Pingpp::APIOperations::Create
     extend Pingpp::APIOperations::List
 
-    def self.object_name
-      'red_envelope'
-    end
-
     def self.resource_url(opts={})
-      '/v1/red_envelopes'
+      '/v1/customs'
     end
-
   end
 end

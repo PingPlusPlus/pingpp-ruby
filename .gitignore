@@ -3,3 +3,5 @@
 .rvmrc
 Gemfile.lock
 .DS_Store
+.vscode/
+.editorconfig

@@ -1,10 +1,8 @@
 module Pingpp
   class Event < APIResource
-    include Pingpp::APIOperations::List
 
-    def self.url
+    def self.resource_url(opts={})
       '/v1/events'
     end
-
   end
 end

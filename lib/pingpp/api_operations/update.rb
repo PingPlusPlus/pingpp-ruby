@@ -2,66 +2,39 @@ module Pingpp
   module APIOperations
     module Update
       module ClassMethods
-        def update(id, params={}, api_key=nil)
-          response, opts = Pingpp.request(:put, "#{self.url}/#{id}", api_key, params)
+        def update(id, params={}, opts={})
+          response, opts = request(:put, "#{resource_url(opts)}/#{id}", params, opts)
           Util.convert_to_pingpp_object(response, opts)
         end
       end
 
-      def save(opts={})
-        values = serialize_params(self).merge(opts)
+      def save(params={}, opts={})
+        update_attributes(params)
 
-        if @values[:metadata]
-          values[:metadata] = serialize_metadata
-        end
+        params = params.reject { |k, _| respond_to?(k) }
 
-        if values.length > 0
-          values.delete(:id)
+        values = self.serialize_params(self).merge(params)
 
-          response, api_key = Pingpp.request(:put, url, @api_key, values)
-          refresh_from(response, api_key)
-        end
+        values.delete(:id)
+
+        response, opts = request(:put, save_url, values, opts)
+        initialize_from(response, opts)
+
         self
-      end
-
-      def serialize_metadata
-        if @unsaved_values.include?(:metadata)
-          # the metadata object has been reassigned
-          # i.e. as object.metadata = {key => val}
-          metadata_update = @values[:metadata]  # new hash
-          new_keys = metadata_update.keys.map(&:to_sym)
-          # remove keys at the server, but not known locally
-          keys_to_unset = @previous_metadata.keys - new_keys
-          keys_to_unset.each {|key| metadata_update[key] = ''}
-
-          metadata_update
-        else
-          # metadata is a PingppObject, and can be serialized normally
-          serialize_params(@values[:metadata])
-        end
-      end
-
-      def serialize_params(obj)
-        case obj
-        when nil
-          ''
-        when PingppObject
-          unsaved_keys = obj.instance_variable_get(:@unsaved_values)
-          obj_values = obj.instance_variable_get(:@values)
-          update_hash = {}
-
-          unsaved_keys.each do |k|
-            update_hash[k] = serialize_params(obj_values[k])
-          end
-
-          update_hash
-        else
-          obj
-        end
       end
 
       def self.included(base)
         base.extend(ClassMethods)
+      end
+
+      private
+
+      def save_url
+        if self[:id] == nil && self.class.respond_to?(:create)
+          self.class.resource_url
+        else
+          resource_url
+        end
       end
     end
   end
