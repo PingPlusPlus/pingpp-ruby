@@ -6,12 +6,13 @@
 =end
 require "pingpp"
 
-# api_key 获取方式：登录 [Dashboard](https://dashboard.pingxx.com)->点击管理平台右上角公司名称->开发信息-> Secret Key
+# api_key 获取方式：登录 [Dashboard](https://dashboard.pingxx.com) -> 点击管理平台右上角公司名称 -> 企业设置 -> Secret Key
 API_KEY = "sk_test_ibbTe5jLGCi5rzfH4OqPW9KC"
-# app_id 获取方式：登录 [Dashboard](https://dashboard.pingxx.com)->点击你创建的应用->应用首页->应用 ID(App ID)
+# app_id 获取方式：登录 [Dashboard](https://dashboard.pingxx.com) -> 应用卡片下方
 APP_ID = "app_1Gqj58ynP0mHeX1q"
 # 设置 API key
 Pingpp.api_key = API_KEY
+Pingpp.private_key_path = File.dirname(__FILE__) + '/your_rsa_private_key.pem'
 
 # 创建 Transfer
 transfer = Pingpp::Transfer.create(
@@ -31,11 +32,11 @@ transfer = Pingpp::Transfer.retrieve("tr_Hm5uDSH8qP8OvbrT0GfDOerP")
 puts transfer
 
 ## 查询列表
-transfers = Pingpp::Transfer.all(:limit => 5)
+transfers = Pingpp::Transfer.list(:app => {:id => APP_ID}, :limit => 3)
 puts transfers
 
 ## 取消 Transfer（仅限 unionpay 渠道）
-Pingpp::Transfer.update(
-    "tr_SmLiPOufXjLKvLCqjHeH0OiL",
-    { :status => "canceled" }
+transfers = Pingpp::Transfer.cancel(
+    "tr_uHWX58DanDOGCKOynHvPirfT"
 )
+puts transfers

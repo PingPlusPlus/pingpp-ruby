@@ -7,10 +7,11 @@
 
 require "pingpp"
 
-# api_key 获取方式：登录 [Dashboard](https://dashboard.pingxx.com)->点击管理平台右上角公司名称->开发信息-> Secret Key
+# api_key 获取方式：登录 [Dashboard](https://dashboard.pingxx.com) -> 点击管理平台右上角公司名称 -> 企业设置 -> Secret Key
 API_KEY = "sk_test_ibbTe5jLGCi5rzfH4OqPW9KC"
 # 设置 API key
 Pingpp.api_key = API_KEY
+Pingpp.private_key_path = File.dirname(__FILE__) + '/your_rsa_private_key.pem'
 
 # 通过发起一次退款请求创建一个新的 refund 对象，只能对已经发生交易并且没有全额退款的 charge 对象发起退款
 ch = Pingpp::Charge.retrieve("ch_bLWP80Ci9S4ODaXLSKLOGe5S")

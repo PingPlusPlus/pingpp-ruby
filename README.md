@@ -1,6 +1,4 @@
-Pingpp Ruby SDK
-=================
-****
+# Pingpp Ruby SDK
 
 ## 简介
 lib 文件夹下是 Ruby SDK 文件，<br>
@@ -175,4 +173,6 @@ Pingpp::Identification.identify(
 )
 ```
 
-**详细信息请参考 [API 文档](https://pingxx.com/document/api?ruby)。**
+部分示例清参考 [example](/example) 目录下的文件。
+
+**详细信息请参考 [API 文档](https://www.pingxx.com/api?language=Ruby)。**
