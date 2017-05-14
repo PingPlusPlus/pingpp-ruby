@@ -5,7 +5,7 @@
   该代码仅供学习和研究 Ping++ SDK 使用，仅供参考。
 =end
 require "pingpp"
-require "digest/md5"
+require_relative "./charge_extra"
 
 # api_key 获取方式：登录 [Dashboard](https://dashboard.pingxx.com) -> 点击管理平台右上角公司名称 -> 企业设置 -> Secret Key
 API_KEY = "sk_test_ibbTe5jLGCi5rzfH4OqPW9KC"
@@ -22,30 +22,18 @@ Pingpp.api_key = API_KEY
 =end
 
 # 设置你的私钥路径，用于请求的签名
-Pingpp.private_key_path = File.dirname(__FILE__) + '/your_rsa_private_key.pem'
+Pingpp.private_key_path = "#{File.dirname(__FILE__)}/your_rsa_private_key.pem"
+
 # 或者直接设置私钥字符串
 # Pingpp.private_key = 'PEM 格式的私钥字符串'
 
 channel = "alipay" # 支付使用的第三方支付渠道取值，请参考：https://www.pingxx.com/api#api-c-new
-extra = {}
-# 特定渠道发起交易时需要的额外参数 extra，下面以 alipay_wap 和 upacp_wap 为例
-case channel
-when "alipay_wap"
-  extra = {
-    # success_url 和 cancel_url 在本地测试不要写 localhost ，请写 127.0.0.1。URL 后面不要加自定义参数
-    :success_url => "http://www.yourdomain.com/success",
-    :cancel_url  => "http://www.yourdomain.com/cancel"
-  }
-when "upacp_wap"
-  extra = {
-    # 银联同步回调地址
-    :result_url => "http://www.yourdomain.com/result"
-  }
-end
-orderNo = Digest::MD5.hexdigest(Time.now.to_i.to_s)[0,12]
+
+order_no = Time.now.to_i.to_s[0,12]
+
 # Pingpp.parse_headers(headers) # request headers
 ch = Pingpp::Charge.create(
-  :order_no  => orderNo,
+  :order_no  => order_no,
   :app       => { :id => APP_ID },
   :channel   => channel,# 支付使用的第三方支付渠道取值，请参考：https://www.pingxx.com/api#api-c-new
   :amount    => 100,# 订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
@@ -53,6 +41,6 @@ ch = Pingpp::Charge.create(
   :currency  => "cny",
   :subject   => "Your Subject",
   :body      => "Your Body",
-  :extra     => extra
+  :extra     => ChargeExtra.send(channel) # extra 对应各渠道的取值规则请查看 charge_extra 相应方法内说明
 )
 puts ch
