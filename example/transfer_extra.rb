@@ -46,13 +46,13 @@ module TransferExtra
       :open_bank => "农业银行",
 
       # 可选，1～20位，省份。
-      :prov => "上海",
+      # :prov => "上海",
 
       # 可选，1～40位，城市。
-      :city => "上海",
+      # :city => "上海",
 
       # 可选，1～80位，开户支行名称。
-      :sub_bank => "上海陆家嘴支行",
+      # :sub_bank => "上海陆家嘴支行",
     }
 
     return recipient, extra
@@ -72,7 +72,7 @@ module TransferExtra
       :open_bank_code => "0103",
 
       # 可选，5位，业务代码，根据通联业务人员提供，不填使用通联提供默认值09900。
-      :business_code => "09900",
+      # :business_code => "09900",
 
       # 可选，1位，银行卡号类型，0：银行卡、1：存折，不填默认使用银行卡。
       :card_type => 0,

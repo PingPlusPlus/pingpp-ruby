@@ -29,6 +29,10 @@ Pingpp.private_key_path = "#{File.dirname(__FILE__)}/your_rsa_private_key.pem"
 
 channel = "alipay" # 支付使用的第三方支付渠道取值，请参考：https://www.pingxx.com/api#api-c-new
 
+# 商户订单号，适配每个渠道对此参数的要求，必须在商户系统内唯一。(alipay : 1-64 位，
+# wx: 2-32 位，bfb: 1-20 位，upacp: 8-40 位，yeepay_wap: 1-50 位，
+# jdpay_wap: 1-30 位，qpay: 1-30 位，cmb_wallet: 10 位纯数字字符串。
+# 注：除 cmb_wallet 外的其他渠道推荐使用 8-20 位，要求数字或字母，不允许特殊字符)。
 order_no = Time.now.to_i.to_s[0,12]
 
 # Pingpp.parse_headers(headers) # request headers
