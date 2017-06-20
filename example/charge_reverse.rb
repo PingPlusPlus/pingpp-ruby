@@ -12,6 +12,6 @@ API_KEY = "sk_test_ibbTe5jLGCi5rzfH4OqPW9KC"
 Pingpp.api_key = API_KEY
 Pingpp.private_key_path = File.dirname(__FILE__) + '/your_rsa_private_key.pem'
 
-# 通过 Charge 对象的 id 查询一个已创建的 Charge 对象
-ch = Pingpp::Charge.retrieve("ch_bLWP80Ci9S4ODaXLSKLOGe5S")
-puts ch # 输出 Ping++ 返回 Charge 对象
+# 线下 Charge 撤销
+ch = Pingpp::Charge.reverse("ch_en9e9O90S080SCyrfPr10y5S")
+puts ch
