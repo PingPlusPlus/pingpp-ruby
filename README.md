@@ -121,9 +121,6 @@ pingpp.createPayment(charge, callback, signature, false);
 ``` ruby
 Pingpp::Event.retrieve("EVENT_ID")
 ```
-``` ruby
-Pingpp::Event.all(:limit => 5)
-```
 
 ### 企业付款
 ``` ruby
