@@ -57,6 +57,7 @@ module Pingpp
     Errno::ETIMEDOUT,
     RestClient::Conflict,
     RestClient::RequestTimeout,
+    RestClient::BadGateway,
   ].freeze
 
   @api_base = 'https://api.pingxx.com'
@@ -67,16 +68,18 @@ module Pingpp
   @open_timeout = 30
   @timeout = 80
 
-  @max_network_retries = 0
+  @max_network_retries = 1
   @max_network_retry_delay = 2
   @initial_network_retry_delay = 0.5
+
+  @bad_gateway_match = true
 
   HEADERS_TO_PARSE = [:pingpp_one_version, :pingpp_sdk_version]
 
   class << self
     attr_accessor :api_key, :api_base, :verify_ssl_certs, :api_version,
                   :parsed_headers, :private_key, :pub_key, :app_id, :timeout,
-                  :open_timeout
+                  :open_timeout, :bad_gateway_match
     attr_reader :max_network_retry_delay, :initial_network_retry_delay
   end
 
@@ -405,8 +408,17 @@ module Pingpp
   end
 
   def self.should_retry?(e, retry_count)
-    retry_count < self.max_network_retries &&
-      RETRY_EXCEPTIONS.any? { |klass| e.is_a?(klass) }
+    if retry_count >= self.max_network_retries
+      return false
+    elsif !RETRY_EXCEPTIONS.any? { |klass| e.is_a?(klass) }
+      return false
+    elsif e.is_a?(RestClient::BadGateway)
+      if self.bad_gateway_match && !e.response.to_s.match(/.+DOCTYPE.+http\-equiv.+refresh.+content.+/m)
+        return false
+      end
+    end
+
+    return true
   end
 
   def self.sleep_time(retry_count)

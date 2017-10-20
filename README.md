@@ -40,6 +40,27 @@ Pingpp.private_key_path = '/path/to/your_rsa_private_key.pem'
 Pingpp.pub_key_path = "/path/to/pingpp_rsa_public_key.pem"
 ```
 
+### 设置重试
+设置重试次数，`0` 表示不重试，默认为 `1`。
+``` ruby
+Pingpp.max_network_retries = 1
+```
+
+当 SDK 请求遇到以下报错时，会自动重试。
+``` ruby
+Errno::ECONNREFUSED,
+Errno::ECONNRESET,
+Errno::ETIMEDOUT,
+RestClient::Conflict,
+RestClient::RequestTimeout,
+RestClient::BadGateway,
+```
+
+当服务端返回 `502` 时，是否根据返回内容(阿里高防返回)来判断是否重试。`false` 表示只要是 `502`，全部重试。默认为 `true`。
+``` ruby
+Pingpp.bad_gateway_match = false
+```
+
 ### 支付
 ``` ruby
 Pingpp::Charge.create(
