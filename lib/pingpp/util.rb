@@ -24,7 +24,25 @@ module Pingpp
         'transfer' => Transfer,
         'batch_refund' => BatchRefund,
         'batch_transfer' => BatchTransfer,
-        'customs' => Customs
+        'event' => Event,
+        'customs' => Customs,
+        'sub_app' => SubApp,
+        'channel' => Channel,
+        'user' => User,
+        'order' => Order,
+        'recharge' => Recharge,
+        'withdrawal' => Withdrawal,
+        'batch_withdrawal' => BatchWithdrawal,
+        'balance_transfer' => BalanceTransfer,
+        'balance_bonus' => BalanceBonus,
+        'balance_transaction' => BalanceTransaction,
+        'coupon' => Coupon,
+        'coupon_template' => CouponTemplate,
+        'settle_account' => SettleAccount,
+        'royalty' => Royalty,
+        'royalty_settlement' => RoyaltySettlement,
+        'royalty_transaction' => RoyaltyTransaction,
+        'royalty_template' => RoyaltyTemplate,
       }
     end
 

@@ -193,4 +193,6 @@ Pingpp::Identification.identify(
 
 部分示例清参考 [example](/example) 目录下的文件。
 
+账户系统相关接口请查看 [Ping++ API 文档](https://www.pingxx.com/api) 或参考[测试示例](/test)
+
 **详细信息请参考 [API 文档](https://www.pingxx.com/api?language=Ruby)。**

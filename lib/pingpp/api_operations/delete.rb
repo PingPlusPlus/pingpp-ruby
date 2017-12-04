@@ -1,10 +1,15 @@
 module Pingpp
   module APIOperations
     module Delete
-      def delete(params={}, opts={})
-        opts = Util.normalize_opts(opts)
-        response, opts = request(:delete, resource_url(opts), params, opts)
-        initialize_from(response, opts)
+      module ClassMethods
+        def delete(id, params={}, opts={})
+          response, opts = request(:delete, "#{resource_url(opts)}/#{id}", params, opts)
+          Util.convert_to_pingpp_object(response, opts)
+        end
+      end
+
+      def self.included(base)
+        base.extend(ClassMethods)
       end
     end
   end
