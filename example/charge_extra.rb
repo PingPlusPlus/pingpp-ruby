@@ -275,4 +275,170 @@ module ChargeExtra
       # :goods_list => [],
     }
   end
+
+  def self.alipay_scan
+    {
+      # 必填，客户端软件中展示的条码值，扫码设备扫描获取。
+      :scan_code => '286801346868493272',
+
+      # 必填，终端号，要求不同终端此号码不一样，会显示在对账单中，如A01、SH008等。
+      :terminal_id => 'SH008',
+
+      # 可选，商品列表，上送格式参照下面示例。
+      # 字段解释：goods_id:商户定义商品编号（一般商品条码），goods_name:商品名称，quantity:数量，
+      # price:单价(单位分)，goods_category:商品类目(可选)，body:商品描述信息(可选)，show_url:商品的展示网址(可选)
+      :goods_list => [
+        {
+          :goods_id => 'iphone',
+          :goods_name => 'iPhone',
+          :quantity => 1,
+          :price => '528800',
+          :goods_category => '123456',
+          :body => '苹果手机',
+          :show_url => 'https://www.example.com',
+        },
+        {
+          :goods_id => 'ipad',
+          :goods_name => 'iPad',
+          :quantity => 1,
+          :price => '528800',
+          :goods_category => '123456',
+          :body => '苹果 iPad',
+          :show_url => 'https://www.example.com',
+        }
+      ],
+
+      # 可选，商户操作员编号(可包含字母、数字、下划线、中划线)
+      :operator_id => 'yx_001',
+
+      # 可选，商户门店编号(可包含字母、数字、下划线、中划线)
+      :store_id => 'SH_001',
+
+      # 可选，系统商编号
+      :sys_service_provider_id => '2088512934206832',
+    }
+  end
+
+  def self.cb_alipay
+    {
+      # 可选，支付类型。默认值为：1（商品购买）。
+      :payment_type => '1',
+
+      # 可选，分账列表。
+      :split_fund_info => [
+        {
+          'account' => '2088866088886666', # 接受分账资金的支付宝账户ID。
+          'amount' => 1, # 分账的金额。
+          'desc' => '分账描述信息', # 分账描述信息。
+        }
+      ],
+    }
+  end
+
+  def self.cb_wx
+    {
+      # 可选，指定支付方式，指定不能使用信用卡支付可设置为 no_credit 。
+      :limit_pay => 'no_credit',
+
+      # 必填，商品列表，字段解释：goods_name:商品名称，goods_num:数量。
+      :goods_list => [
+        {
+          'goods_name' => 'iPhone',
+          'goods_num' => '1',
+        },
+        {
+          'goods_name' => 'iPad',
+          'goods_num' => '2',
+        }
+      ],
+    }
+  end
+
+  def self.cb_wx_pub
+    {
+      # 可选，指定支付方式，指定不能使用信用卡支付可设置为 no_credit 。
+      :limit_pay => 'no_credit',
+
+      # 必填，用户在商户 appid 下的唯一标识。
+      :open_id => 'openidxxxxxxxxxxxx',
+
+      # 必填，商品列表，字段解释：goods_name:商品名称，goods_num:数量。
+      :goods_list => [
+        {
+          'goods_name' => 'iPhone',
+          'goods_num' => '1',
+        },
+        {
+          'goods_name' => 'iPad',
+          'goods_num' => '2',
+        }
+      ],
+    }
+  end
+
+  def self.cb_wx_pub_qr
+    {
+      # 可选，指定支付方式，指定不能使用信用卡支付可设置为 no_credit 。
+      :limit_pay => 'no_credit',
+
+      # 必填，商品 ID，1-32 位字符串。此 id 为二维码中包含的商品 ID，商户可自定义。
+
+      :product_id => 'your_product_id',
+
+
+      # 必填，商品列表，字段解释：goods_name:商品名称，goods_num:数量。
+      :goods_list => [
+        {
+          'goods_name' => 'iPhone',
+          'goods_num' => '1',
+        },
+        {
+          'goods_name' => 'iPad',
+          'goods_num' => '2',
+        }
+      ],
+    }
+  end
+
+  def self.cb_wx_pub_scan
+    {
+      # 必填，客户端软件中展示的条码值，扫码设备扫描获取。
+      :scan_code => '286801346868493272',
+
+      # 必填，商品列表，字段解释：goods_name:商品名称，goods_num:数量。
+      :goods_list => [
+        {
+          'goods_name' => 'iPhone',
+          'goods_num' => '1',
+        },
+        {
+          'goods_name' => 'iPad',
+          'goods_num' => '2',
+        },
+      ],
+
+      # 可选，终端号，要求不同终端此号码不一样，会显示在对账单中，如A01、SH008等。
+      :terminal_id => 'SH008',
+
+      # 可选，指定支付方式，指定不能使用信用卡支付可设置为 no_credit 。
+      :limit_pay => 'no_credit',
+    }
+  end
+
+  def self.wx_pub_scan
+    {
+      # 必填，客户端软件中展示的条码值，扫码设备扫描获取。
+      :scan_code => '286801346868493272',
+
+      # 可选，终端号，要求不同终端此号码不一样，会显示在对账单中，如A01、SH008等。
+      :terminal_id => 'SH008',
+
+      # 可选，指定支付方式，指定不能使用信用卡支付可设置为 no_credit 。
+      :limit_pay => 'no_credit',
+
+      # 可选，商品标记，代金券或立减优惠功能的参数。
+
+      # :goods_tag => 'your_goods_tag',
+    }
+  end
 end
