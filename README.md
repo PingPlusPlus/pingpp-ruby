@@ -40,6 +40,14 @@ Pingpp.private_key_path = '/path/to/your_rsa_private_key.pem'
 Pingpp.pub_key_path = "/path/to/pingpp_rsa_public_key.pem"
 ```
 
+### 设置自定义 CA 证书路径
+``` ruby
+Pingpp.ca_bundle = "/path/to/cacert.pem"
+```
+
+不设置时，会默认使用 SDK 包含的 CA 证书。  
+如果需要手动更新 CA 证书，可从 https://curl.haxx.se/docs/caextract.html 下载，并使用此方法设置证书路径。
+
 ### 设置重试
 设置重试次数，`0` 表示不重试，默认为 `1`。
 ``` ruby

@@ -186,6 +186,14 @@ module Pingpp
     @max_network_retries = val.to_i
   end
 
+  def self.ca_bundle
+    @ca_bundle_path
+  end
+
+  def self.ca_bundle=(val)
+    @ca_bundle_path = val
+  end
+
   private
 
   def self.user_agent
