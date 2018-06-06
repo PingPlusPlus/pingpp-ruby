@@ -187,5 +187,13 @@ module Pingpp
     def coupon_template_id_to_delete
       '300117090822195700031902'
     end
+
+    def get_bs_id
+      '670180130750711562240001'
+    end
+
+    def get_agreement_id
+      'agr_19EEE7QdgGMCoY'
+    end
   end
 end

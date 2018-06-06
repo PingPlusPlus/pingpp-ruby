@@ -18,6 +18,9 @@ Rake::TestTask.new do |t|
     'test/coupon_template_test.rb',
     'test/coupon_test.rb',
     # 'test/sub_app_test.rb',
+    'test/agreement_test.rb',
+    # 'test/balance_settlement_test.rb',
+    # 'test/card_info_test.rb',
   ]
 end
 

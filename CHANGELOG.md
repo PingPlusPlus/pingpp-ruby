@@ -1,8 +1,14 @@
 # ChangeLog
 
-## 2.2.2 (2018-02-08)
+## 2.2.2
 #### 新增
 - 自定义 CA 证书路径
+- 添加余额结算接口 (BalanceSettlement)
+- 添加银行卡信息查询接口 (CardInfo)
+- 添加签约接口 (Agreement)
+- 添加微信小程序获取 openid 和 session_key 方法
+    - `Pingpp::WxLiteOauth.get_openid`
+    - `Pingpp::WxLiteOauth.get_session`
 
 ## 2.2.1 (2018-01-05)
 #### 更改

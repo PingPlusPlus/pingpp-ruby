@@ -56,6 +56,9 @@ require 'pingpp/royalty_transaction'
 require 'pingpp/balance_transfer'
 require 'pingpp/balance_bonus'
 require 'pingpp/royalty_template'
+require 'pingpp/balance_settlement'
+require 'pingpp/card_info'
+require 'pingpp/agreement'
 
 # Errors
 require 'pingpp/errors/pingpp_error'
@@ -66,8 +69,9 @@ require 'pingpp/errors/authentication_error'
 require 'pingpp/errors/channel_error'
 require 'pingpp/errors/rate_limit_error'
 
-# WxPubOauth
+# WxOAuth
 require 'pingpp/wx_pub_oauth'
+require 'pingpp/wx_lite_oauth'
 
 module Pingpp
   DEFAULT_CA_BUNDLE_PATH = File.dirname(__FILE__) + '/data/ca-certificates.crt'
