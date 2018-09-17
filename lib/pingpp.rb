@@ -147,11 +147,9 @@ module Pingpp
 
     if verify_ssl_certs
       request_opts = {:verify_ssl => OpenSSL::SSL::VERIFY_PEER,
-                      :ssl_ca_file => @ca_bundle_path,
-                      :ssl_version => 'TLSv1'}
+                      :ssl_ca_file => @ca_bundle_path}
     else
-      request_opts = {:verify_ssl => false,
-                      :ssl_version => 'TLSv1'}
+      request_opts = {:verify_ssl => false}
       unless @verify_ssl_warned
         @verify_ssl_warned = true
         $stderr.puts("WARNING: Running without SSL cert verification. " \
