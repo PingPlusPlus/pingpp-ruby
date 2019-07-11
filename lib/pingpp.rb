@@ -59,6 +59,10 @@ require 'pingpp/royalty_template'
 require 'pingpp/balance_settlement'
 require 'pingpp/card_info'
 require 'pingpp/agreement'
+require 'pingpp/sub_bank'
+require 'pingpp/split_receiver'
+require 'pingpp/split_profit'
+require 'pingpp/profit_transaction'
 
 # Errors
 require 'pingpp/errors/pingpp_error'

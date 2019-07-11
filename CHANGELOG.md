@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 2.2.4
+
+- 新增: `sub_bank`, `split_proft`, `split_receiver`, `profit_transaction` 相关接口
+
+---
+
 ## 2.2.3
 
 #### 修改
